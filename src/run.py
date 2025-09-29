@@ -1,5 +1,7 @@
+"""
+Module responsible for running the architectural reconstruction agent.
+"""
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
