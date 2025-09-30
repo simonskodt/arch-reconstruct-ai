@@ -23,8 +23,9 @@ jobs:
       - name: Install dependencies with uv
         run: |
           uv venv
-          uv pip install pylint
+          source .venv/bin/activate
           uv sync
+          uv pip install pylint
 
       - name: Run pylint
         run: |
