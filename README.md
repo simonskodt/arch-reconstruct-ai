@@ -29,12 +29,12 @@ to environmental entities"
 ## What Is?
 
 <details>
-    <summary>Architectural Reconstruction</summary>
+    <summary><b>Architectural Reconstruction</b></summary>
     Architectural reconstruction is the process of recovering, documenting, and understanding the architectural design of an existing software system. This technique helps developers comprehend how different components of a codebase interact with each other by recreating architectural models from source code and other artifacts.
 </details>
 
 <details>
-    <summary>Agentic AI</summary>
+    <summary><b>Agentic AI</b></summary>
     Agentic AI refers to artificial intelligence systems that act as agents with some degree of autonomy, purpose-directedness, and the ability to perform tasks on behalf of users.
     Microsoft defines it as:
     <blockquote>
