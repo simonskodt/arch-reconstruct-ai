@@ -1,5 +1,6 @@
 """
-    This file spins up
+This file defines an email assistant agent for LangGraph Studio.
+It uses LangChain and OpenAI to create an agent that can send emails via the send_email tool.
 """
 
 from langchain.agents import create_agent
