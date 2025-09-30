@@ -14,12 +14,17 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install uv
+      run: pip install uv
+
+    - name: Install dependencies with uv
       run: |
-        python -m pip install --upgrade pip
-        pip install uv
-        pip install pylint
+        uv venv  # create uv-managed virtualenv
+        source .venv/bin/activate
+        uv pip install pylint # uv add --prerelease=allow langgraph langchain
         uv sync
-    - name: Analysing the code with pylint
+
+    - name: Run pylint
       run: |
+        source .venv/bin/activate
         pylint $(git ls-files '*.py')
