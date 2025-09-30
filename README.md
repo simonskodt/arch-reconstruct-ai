@@ -11,18 +11,20 @@ ArchReconstructAI is an **agentic AI system** that helps users understand codeba
 
 ## Motivation Behind This Repository
 
-Our thesis focuses on agentic AI systems. After exploring various frameworks for developing agentic AI (LangGraph, CrewAI, AutoGen, Semantic Kernel, SmolAgents, Pydantic AI, Agno, n8n, etc.), we decided to build our own agentic AI system. We have all completed the Software Architecture course which introduced us to architectural reconstruction. This process requires running several different tools and possessing substantial knowledge to obtain an architectural view. Extracting the as-built architecture of a repository requires specialised knowledge of architectural description and analysis tools—which we considered an ideal challenge for our agentic AI system.
+Our thesis focuses on agentic AI systems. After exploring various frameworks for developing agentic AI (LangGraph, CrewAI, AutoGen, Semantic Kernel, SmolAgents, Pydantic AI, Agno, n8n, etc.), we decided to build our own agentic AI system. We have all completed the Software Architecture course which introduced us to architectural reconstruction. This process requires running several different tools and possessing substantial knowledge to obtain an architectural view of the system. Therefore, we considered the processes of architectural reconstruction as an ideal challenge to be solved by an agentic AI system.
 
 ## How Does It Work?
 
 Users can run our application against a repository, and the agentic AI system will collaborate with the human driver to develop an understanding of the codebase. The system collects general data, leverages domain-specific knowledge on architectural reconstruction, and invokes relevant tools to generate comprehensive documentation describing the system's architecture from multiple viewpoints. The views we initially aim to provide are described in "The 3+1 Approach to Software Architecture Description Using UML," namely:
 
-- "A Module viewpoint concerned with how functionality of the system maps
+- "A **Module viewpoint** concerned with how functionality of the system maps
 to static development units,
-- a Component & Connector viewpoint concerned with the runtime mapping
+- a **Component & Connector** viewpoint concerned with the runtime mapping
 of functionality to components of the architecture, and
-- an Allocation viewpoint concerned with how software entities are mapped
-to environmental entities" (Christensen, Henrik & Corry, Aino & Hansen, Klaus. (2004). An Approach to Software Architecture Description Using UML.).
+- an **Allocation viewpoint** concerned with how software entities are mapped
+to environmental entities"
+
+(Christensen, Henrik & Corry, Aino & Hansen, Klaus. (2004). An Approach to Software Architecture Description Using UML.).
 
 ## What Is?
 
