@@ -4,6 +4,7 @@ Module responsible for running the architectural reconstruction agent.
 import logging
 
 logger = logging.getLogger(__name__)
+this_is_bad_code = 0
 
 def run_agent() -> int:
     """
