@@ -8,23 +8,24 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.13"]
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install uv
-      run: pip install uv
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies with uv
-      run: |
-        uv venv  # create uv-managed virtualenv
-        source .venv/bin/activate
-        uv pip install pylint # uv add --prerelease=allow langgraph langchain
-        uv sync
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Run pylint
-      run: |
-        source .venv/bin/activate
-        pylint $(git ls-files '*.py')
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies with uv
+        run: |
+          uv venv
+          uv pip install pylint
+          uv sync
+
+      - name: Run pylint
+        run: |
+          uv run pylint $(git ls-files '*.py')
