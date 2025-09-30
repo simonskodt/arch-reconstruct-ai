@@ -37,7 +37,9 @@ to environmental entities"
     <summary>Agentic AI</summary>
     Agentic AI refers to artificial intelligence systems that act as agents with some degree of autonomy, purpose-directedness, and the ability to perform tasks on behalf of users.
     Microsoft defines it as:
-    "AI Agents are **systems** that enable **Large Language Models (LLMs)** to **perform actions** by extending their capabilities by giving LLMs **access to tools** and **knowledge**".
+    <blockquote>
+    AI Agents are <b>systems</b> that enable <b>Large Language Models (LLMs)</b> to <b>perform actions</b> by extending their capabilities by giving LLMs <b>access to tools</b> and <b>knowledge</b>.
+    </blockquote>
 </details>
 
 ## Installation
