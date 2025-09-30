@@ -10,5 +10,5 @@ dependencies = [
     "pre-commit>=4.3.0",
     "langchain-openai>=0.3.33",
     "langgraph-cli[inmem]>=0.4.2",
-    "langgraph-prebuilt>=0.7.0a2"
+    "langgraph-prebuilt>=0.7.0a2",
 ]
