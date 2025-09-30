@@ -1,4 +1,68 @@
-# ArchReconstructAI—Reconstructing Architecture with Agentic AI
+![Header](docs/img/cover.png)
 
-ArchReconstructAI is an agentic AI system that helps users understand codebases much faster. 
-It eliminates the need to run separate architectural reconstruction tools, streamlining the process of comprehending repositories.
+[![Pylint](https://github.com/simonskodt/arch-reconstruct-ai/actions/workflows/pylint.yml/badge.svg?branch=main)](https://github.com/simonskodt/arch-reconstruct-ai/actions/workflows/pylint.yml)
+[![License: MIT](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c34_License-MIT-blue.svg)](/LICENSE)
+[![Deps](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c9e_Deps-Up--to--date-brightgreen.svg)]()
+
+ArchReconstructAI is an **agentic AI system** that helps users understand codebases by reconstructing its architecture.
+
+> [!WARNING]
+> The project is under development, so it does currenly not work.
+
+## Motivation Behind This Repository
+
+Our thesis focuses on agentic AI systems. After exploring various frameworks for developing agentic AI (LangGraph, CrewAI, AutoGen, Semantic Kernel, SmolAgents, Pydantic AI, Agno, n8n, etc.), we decided to build our own agentic AI system. We have all completed the Software Architecture course which introduced us to architectural reconstruction. This process requires running several different tools and possessing substantial knowledge to obtain an architectural view. Extracting the as-built architecture of a repository requires specialised knowledge of architectural description and analysis tools—which we considered an ideal challenge for our agentic AI system.
+
+## How Does It Work?
+
+Users can run our application against a repository, and the agentic AI system will collaborate with the human driver to develop an understanding of the codebase. The system collects general data, leverages domain-specific knowledge on architectural reconstruction, and invokes relevant tools to generate comprehensive documentation describing the system's architecture from multiple viewpoints. The views we initially aim to provide are described in "The 3+1 Approach to Software Architecture Description Using UML," namely:
+
+- "A Module viewpoint concerned with how functionality of the system maps
+to static development units,
+- a Component & Connector viewpoint concerned with the runtime mapping
+of functionality to components of the architecture, and
+- an Allocation viewpoint concerned with how software entities are mapped
+to environmental entities" (Christensen, Henrik & Corry, Aino & Hansen, Klaus. (2004). An Approach to Software Architecture Description Using UML.).
+
+## What Is?
+
+<details>
+    <summary>Architectural Reconstruction</summary>
+    Architectural reconstruction is the process of recovering, documenting, and understanding the architectural design of an existing software system. This technique helps developers comprehend how different components of a codebase interact with each other by recreating architectural models from source code and other artifacts.
+</details>
+
+<details>
+    <summary>Agentic AI</summary>
+    Agentic AI refers to artificial intelligence systems that act as agents with some degree of autonomy, purpose-directedness, and the ability to perform tasks on behalf of users.
+    Microsoft defines it as:
+    "AI Agents are **systems** that enable **Large Language Models (LLMs)** to **perform actions** by extending their capabilities by giving LLMs **access to tools** and **knowledge**".
+</details>
+
+## Installation
+
+To install ArchReconstructAI:
+
+> [!IMPORTANT]
+> To run the program, we use the package manager *uv*. [Guide to installation.](https://github.com/astral-sh/uv)
+
+```bash
+git clone https://github.com/yourusername/ArchReconstructAI.git
+cd ArchReconstructAI
+uv run main.py
+```
+
+## Usage
+
+You can run ArchReconstructAI against a repository using:
+
+```bash
+uv run main.py # TBD
+```
+
+## Output Examples
+
+Under development.
+
+## License
+
+This project is licensed under the MIT License—see the [LICENSE](LICENSE) file for details.
