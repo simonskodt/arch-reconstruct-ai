@@ -4,9 +4,6 @@ It uses LangChain and OpenAI to create an agent that can send emails via the sen
 """
 
 from langchain.agents import create_agent
-from langchain_openai import ChatOpenAI
-
-model = ChatOpenAI(model="gpt-4.1-nano")
 
 def send_email(to: str, subject: str, body: str):
     """Send an email"""
