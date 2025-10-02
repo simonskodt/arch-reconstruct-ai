@@ -1,7 +1,9 @@
 {
-  "dependencies": ["."],
+  "dependencies": [".", "./experiments/langgraph_Studio"],
   "graphs": {
-    "agent": "./experiments/langgraph_Studio/agent.py:agent"
+    "agent": "./experiments/langgraph_Studio/agent.py:agent",
+    "planning_agent": "./experiments/langgraph_Studio/planning_agent.py:planning_agent",
+    "deep_agent": "./experiments/langgraph_Studio/deep_agent.py:graph"
   },
   "env": ".env"
 }

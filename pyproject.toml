@@ -11,4 +11,5 @@ dependencies = [
     "langchain-openai>=0.3.33",
     "langgraph-cli[inmem]>=0.4.2",
     "langgraph-prebuilt>=0.7.0a2",
+    "deepagents>=0.0.10",
 ]
