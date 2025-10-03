@@ -2,8 +2,8 @@
 import random
 from typing import NotRequired, Literal,Annotated
 from langgraph.graph import StateGraph, START, END
+from langgraph.types import (interrupt, Command)
 from langchain.agents import create_agent, AgentState
-from langgraph.types import interrupt, Command
 from util import github_clone
 
 class State(AgentState):
@@ -29,7 +29,8 @@ def update_plan(state: State) -> State:
     """Update the plan based on new information."""
     if "plan" not in state or state["plan"] is None:
         state["plan"] = ["Step 1: Initial Step"]
-    state["plan"].append(f"Step {len(state['plan']) + 1}: {(state.get('messages', [])[-1]).content}")
+    state["plan"].append(
+        f"Step {len(state['plan']) + 1}: {(state.get('messages', [])[-1]).content}")
     return state
 
 def replan(state: State) -> State:
@@ -59,7 +60,7 @@ graph_builder.add_edge("human_approval", "agent")
 graph_builder.add_edge("human_approval", "replan")
 graph_builder.add_conditional_edges(
     "agent",
-    lambda state: "replan" if state.get("plan") is None 
+    lambda state: "replan" if state.get("plan") is None
         else (END if random.random() < 0.5 else "replan"),
     {
         "replan": "replan",
