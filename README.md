@@ -1,13 +1,14 @@
 ![Header](docs/img/cover.png)
 
 [![Pylint](https://github.com/simonskodt/arch-reconstruct-ai/actions/workflows/pylint.yml/badge.svg?branch=main)](https://github.com/simonskodt/arch-reconstruct-ai/actions/workflows/pylint.yml)
+[![Check LangChain Dependencies Updates](https://github.com/simonskodt/arch-reconstruct-ai/actions/workflows/Langchain_dependencies.yml/badge.svg)](https://github.com/simonskodt/arch-reconstruct-ai/actions/workflows/Langchain_dependencies.yml)
 [![License: MIT](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c34_License-MIT-blue.svg)](/LICENSE)
 [![Deps](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c9e_Deps-Up--to--date-brightgreen.svg)]()
 
 ArchReconstructAI is an **agentic AI system** that helps users understand codebases by reconstructing its architecture.
 
 > [!WARNING]
-> The project is under development, so it does currenly not work.
+> The project is under development; therefore currently not working.
 
 ## Motivation Behind This Repository
 
