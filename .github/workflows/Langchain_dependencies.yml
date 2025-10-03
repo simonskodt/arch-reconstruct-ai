@@ -3,7 +3,7 @@ name: "Check LangChain Dependencies Updates"
 on:
   schedule:
     - cron: "0 4 * * 0"   # every Sunday 05:00 CET (UTC+1).
-  [push]:
+  push: {}
 
 
 jobs:
