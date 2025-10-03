@@ -1,8 +1,3 @@
 """
-Experiments module for arch-reconstruct-ai.
-
-This module contains experimental code and research implementations
-for architectural reconstruction using AI techniques.
+Experiments package for testing out LangGraph framework.
 """
-
-__version__ = "0.1.0"
