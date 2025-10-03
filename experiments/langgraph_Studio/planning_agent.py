@@ -1,6 +1,6 @@
 """A planning agent that uses a state graph to manage conversation state."""
 import random
-from typing import NotRequired, Literal,Annotated
+from typing import NotRequired, Literal, Annotated
 from langgraph.graph import StateGraph, START, END
 from langchain.agents import create_agent, AgentState
 from langgraph.types import interrupt, Command
