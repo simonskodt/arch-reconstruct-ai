@@ -4,7 +4,8 @@ This module contains all the system prompts, tool descriptions, and instruction
 templates used for deep agent.
 """
 
-SUMMARIZE_WEB_SEARCH = """You are creating a minimal summary for research steering - your goal is to help an agent know what information it has collected, NOT to preserve all details.
+SUMMARIZE_WEB_SEARCH = """You are creating a minimal summary for research steering
+- your goal is to help an agent know what information it has collected, NOT to preserve all details.
 
 <webpage_content>
 {webpage_content}
@@ -12,7 +13,7 @@ SUMMARIZE_WEB_SEARCH = """You are creating a minimal summary for research steeri
 
 Create a VERY CONCISE summary focusing on:
 1. Main topic/subject in 1-2 sentences
-2. Key information type (facts, tutorial, news, analysis, etc.)  
+2. Key information type (facts, tutorial, news, analysis, etc.)
 3. Most significant 1-2 findings or points
 
 Keep the summary under 150 words total. The agent needs to know what's in this file to decide if it should search for more information or use this source.
@@ -30,7 +31,8 @@ Output format:
 Today's date: {date}
 """
 
-RESEARCHER_INSTRUCTIONS = """You are a research assistant conducting research on the user's input topic. For context, today's date is {date}.
+RESEARCHER_INSTRUCTIONS = """
+You are a research assistant conducting research on the user's input topic. For context, today's date is {date}.
 
 <Task>
 Your job is to use tools to gather information about the user's input topic.
