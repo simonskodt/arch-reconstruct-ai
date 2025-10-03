@@ -1,4 +1,4 @@
-name: "Check LangChain Dependencies Updates"
+name: "Check critical dependencies are up to date"
 
 on:
   schedule:
