@@ -10,7 +10,7 @@ research_sub_agent = SubAgent({
     "Only give this researcher one topic at a time.",
     "prompt": RESEARCHER_INSTRUCTIONS.format(date=get_today_str()),
     "tools": sub_agent_tools,
-    "model": {"model": "gpt-5-nano","model_provider": "openai"},
+    "model": {"model": "gpt-5-nano", "model_provider": "openai"},
 })
 
 max_concurrent_research_units = 3
