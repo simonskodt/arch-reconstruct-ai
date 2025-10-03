@@ -19,11 +19,8 @@ def human_approval(state: State) -> Command[Literal["agent", "replan"]]:
         }
     )
     if is_approved:
-        # Just continue on the graph path (skip replan)
         return Command(goto="agent")
-    else:
-        # Force going into the replan node
-        return Command(goto="replan")
+    return Command(goto="replan")
 
 def update_plan(state: State) -> State:
     """Update the plan based on new information."""
