@@ -23,4 +23,4 @@ repos:
           - "--rcfile=.pylintrc"
           - "--reports=no"
           - "--score=no"
-          - "--frozen"
+          # - "--frozen"
