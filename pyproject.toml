@@ -14,4 +14,6 @@ dependencies = [
     "deepagents>=0.0.10",
     "gitpython>=3.1.45",
     "langchain-mcp-adapters>=0.1.10",
+    "gitingest>=0.3.1",
+    "ipykernel>=6.30.1",
 ]
