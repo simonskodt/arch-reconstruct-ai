@@ -3,18 +3,17 @@ repos:
     rev: v4.5.0
     hooks:
       - id: trailing-whitespace
-        stages: [commit]
+        stages: [pre-commit]
       - id: end-of-file-fixer
-        stages: [commit]
+        stages: [pre-commit]
 
-repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
     rev: 0.8.23
     hooks:
       - id: uv-sync
 
-  # Pylint: only run before pushing
+  # Pylint: only run on pre-commit (read-only check)
   - repo: local
     hooks:
       - id: pylint
@@ -22,7 +21,7 @@ repos:
         entry: uv run pylint
         language: system
         types: [python]
-        stages: [pre-commit, push]
+        stages: [pre-commit]
         require_serial: true
         pass_filenames: true
         always_run: false
@@ -30,4 +29,4 @@ repos:
           - "--rcfile=.pylintrc"
           - "--reports=no"
           - "--score=no"
-
+          - "--output-format=text"
