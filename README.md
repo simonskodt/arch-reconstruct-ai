@@ -74,11 +74,11 @@ This project is licensed under the MIT License—see the [LICENSE](LICENSE) file
 
 
 ## Run LangGraph Studio
+
 LangGraph studio can be used to visualize, interact, and debug your agent locally.
 1. Add LANGSMITH_API_KEY to your own local .env file. https://smith.langchain.com/o/e7bcbe7e-b691-491f-a1d0-f77247fd57df/settings/apikeys
 2. Add agent to langgraph.json file. 
-3. In the root of project run: uv sync
-4. To start LangGraph Studio run: langgraph dev
+3. To start LangGraph Studio run: `uv run langgraph dev`
 
 ## Run Deepagents UI 
 
