@@ -7,6 +7,13 @@ repos:
       - id: end-of-file-fixer
         stages: [pre-commit]
 
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.8.23
+    hooks:
+    - id: uv-sync
+      args: ["--locked", "--all-packages"]
+
   # Pylint: only run on pre-commit (read-only check)
   - repo: local
     hooks:
