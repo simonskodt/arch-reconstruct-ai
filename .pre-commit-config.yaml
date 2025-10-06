@@ -23,4 +23,5 @@ repos:
           - "--reports=no"
           - "--score=no"
           - "--frozen"
+          - "--locked"
           - "--output-format=text"
