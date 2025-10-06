@@ -15,7 +15,7 @@ repos:
         entry: uv run pylint
         language: system
         types: [python]
-        stages: [pre-commit]
+        stages: [pre-commit, push]
         require_serial: true
         args:
           - "--rcfile=.pylintrc"
