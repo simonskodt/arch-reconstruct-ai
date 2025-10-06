@@ -1,5 +1,4 @@
 """Parse the toml dependencies in order to check whether these packages are outdated"""
-#!/usr/bin/env python3
 import re
 import tomllib  # use `import tomli` if Python <3.11
 PYPROJECT_PATH ="pyproject.toml"

@@ -1,5 +1,4 @@
 """A script that checks if critical packages are up to date"""
-#!/usr/bin/env python3
 import json
 import subprocess
 import argparse
