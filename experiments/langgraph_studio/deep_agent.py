@@ -1,21 +1,10 @@
 """A deep agent that uses tools to perform software architecture reconstruction."""
 from deepagents import create_deep_agent, SubAgent
-from langchain_text_splitters import CharacterTextSplitter
-from langchain_core.vectorstores import InMemoryVectorStore
-from langchain_openai import OpenAIEmbeddings
-
 from experiments.langgraph_studio.util import get_today_str, think_tool
 from experiments.langgraph_studio.prompts import (
     SUBAGENT_USAGE_INSTRUCTIONS,
     RESEARCHER_INSTRUCTIONS
 )
-
-
-embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-
-
-test = CharacterTextSplitter()
-vs = InMemoryVectorStore(embedding=embeddings)
 
 
 sub_agent_tools = [think_tool]
