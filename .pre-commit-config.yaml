@@ -12,7 +12,8 @@ repos:
     rev: 0.8.23
     hooks:
     - id: uv-sync
-      args: ["--locked", "--all-packages"]
+      stages: [pre-commit]
+      args: ["--locked", "--all-packages"] # if this fails update your uv lock to match the dependencies
 
   # Pylint: only run on pre-commit (read-only check)
   - repo: local
@@ -24,10 +25,10 @@ repos:
         types: [python]
         stages: [pre-commit]
         require_serial: true
-
+        pass_filenames: true
+        always_run: false
         args:
           - "--rcfile=.pylintrc"
           - "--reports=no"
           - "--score=no"
-          - "--frozen"
           - "--output-format=text"
