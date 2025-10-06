@@ -31,3 +31,4 @@ repos:
           - "--rcfile=.pylintrc"
           - "--reports=no"
           - "--score=no"
+          - "--requirement=requirements.txt"
