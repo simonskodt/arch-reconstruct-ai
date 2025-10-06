@@ -7,16 +7,6 @@ repos:
       - id: end-of-file-fixer
         stages: [pre-commit]
 
-  - repo: https://github.com/astral-sh/uv-pre-commit
-    # uv version.
-    rev: 0.8.23
-    hooks:
-      - id: uv-lock
-      - id: uv-export
-      # Compile requirements
-      - id: pip-compile
-        args: [requirements.in, -o, requirements.txt]
-
   # Pylint: only run before commit
   - repo: local
     hooks:
