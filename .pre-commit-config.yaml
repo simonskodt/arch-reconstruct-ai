@@ -3,11 +3,11 @@ repos:
     rev: v4.5.0
     hooks:
       - id: trailing-whitespace
-        stages: [commit]
+        stages: [pre-commit]
       - id: end-of-file-fixer
-        stages: [commit]
+        stages: [pre-commit]
 
-  # Pylint: only run before pushing
+  # Pylint: only run before commit
   - repo: local
     hooks:
       - id: pylint
@@ -15,7 +15,7 @@ repos:
         entry: pylint
         language: system
         types: [python]
-        stages: [push]
+        stages: [pre-commit]
         require_serial: true
         args:
           - "--rcfile=.pylintrc"
