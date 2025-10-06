@@ -1,0 +1,36 @@
+name: "Check critical dependencies are up to date"
+
+on:
+  schedule:
+    - cron: "0 4 * * 0"   # every Sunday 05:00 CET (UTC+1).
+
+jobs:
+  check_updates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install uv
+          uv sync
+
+      - name: list for outdated packages
+        run: |
+          uv pip list --outdated
+
+      - name: Check specific critical packages
+        id: check_packages
+        run: |
+            python -u scripts/workflow/parse_toml_dependencies.py \
+              | python -u scripts/workflow/check_outdated_packages.py
