@@ -17,11 +17,10 @@ repos:
         types: [python]
         stages: [pre-commit]
         require_serial: true
-        always_run: false
+
         args:
           - "--rcfile=.pylintrc"
           - "--reports=no"
           - "--score=no"
           - "--frozen"
-          - "--locked"
           - "--output-format=text"
