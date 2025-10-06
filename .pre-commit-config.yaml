@@ -17,6 +17,8 @@ repos:
         types: [python]
         stages: [pre-commit, push]
         require_serial: true
+        pass_filenames: true
+        always_run: false
         args:
           - "--rcfile=.pylintrc"
           - "--reports=no"
