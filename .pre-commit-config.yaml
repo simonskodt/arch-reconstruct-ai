@@ -22,8 +22,8 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint
-        language: python
+        entry: uv run pylint
+        language: system
         types: [python]
         stages: [pre-commit]
         require_serial: true
@@ -31,4 +31,3 @@ repos:
           - "--rcfile=.pylintrc"
           - "--reports=no"
           - "--score=no"
-          - "--requirement=requirements.txt"
