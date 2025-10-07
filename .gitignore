@@ -31,7 +31,6 @@ wheels/
 
 # Langgraph studio files
 .Langgraph_api/*
-uv.lock
 
 # User-specific stuff
 .idea/**/workspace.xml
