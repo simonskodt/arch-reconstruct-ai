@@ -23,8 +23,6 @@ from dotenv import load_dotenv
 from experiments.utils import utils_configurations
 from experiments.utils._sanitize import ConfigSanitizer
 
-sys.path.append(os.getcwd()) # Add the project root to sys.path so 'experiments' can be imported
-
 # Config file path
 
 
@@ -52,11 +50,9 @@ def load_mcp_config(
 def save_mcp_config(
     config: Dict[str, Dict[str, Any]],
     path: str = utils_configurations.MCP_CONFIG_FILE
-) -> Dict[str, Any]:
+) -> Dict[str, str]:
     """
     Save MCP server configuration to file with secret redaction.
-
-    Args:
         config: The configuration dictionary to save
         path: Path where to save the configuration file
 
@@ -137,7 +133,7 @@ def _resolve(obj) -> Any:
         return utils_configurations.ENVIRONMENT_VARIABLE_REGEX.sub(_replace, obj)
     return obj
 
-def _replace(match: Match[str]):
+def _replace(match: Match[str]) -> str:
     """
     Replace a matched environment variable with its value.
 

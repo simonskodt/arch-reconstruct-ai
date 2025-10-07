@@ -1,7 +1,7 @@
 """Helper methods for loading MCP config with environment variable substitution and sanitization."""
 
-import re as regex
-from typing import Any, Optional
+import re
+from typing import Any, Dict, Optional, List
 
 from experiments.utils import utils_configurations
 
@@ -12,7 +12,7 @@ class ConfigSanitizer:
 
     def __init__(self):
         """Initialize the sanitizer with secret detection patterns."""
-        self.leaks: list[str] = []
+        self.leaks: List[str] = []
         self._secret_key_tokens = (
             "api_key",
             "apikey",
@@ -22,8 +22,8 @@ class ConfigSanitizer:
             "password",
             "authorization"
         )
-        self._bearer_regex = regex.compile(r'^(?P<scheme>Bearer\s+)(?P<token>\S+)',
-                                           regex.IGNORECASE)
+        self._bearer_regex = re.compile(r'^(?P<scheme>Bearer\s+)(?P<token>\S+)',
+                                        re.IGNORECASE)
 
     def sanitize(self, obj: Any, path_tuple: tuple[str, ...] = ()) -> Any:
         """
@@ -57,7 +57,7 @@ class ConfigSanitizer:
 
     def _sanitize_dictionary(self, obj: dict, path_tuple: tuple[str, ...]) -> dict:
         """Sanitize a dictionary by processing each key-value pair."""
-        sanitized: dict[str, Any] = {}
+        sanitized: Dict[str, Any] = {}
         for key, value in obj.items():
             current_path = path_tuple + (key,)
 
@@ -82,7 +82,7 @@ class ConfigSanitizer:
 
     def _sanitize_list(self, obj: list, path_tuple: tuple[str, ...]) -> list:
         """Sanitize a list by processing each element."""
-        sanitized_list: list[Any] = []
+        sanitized_list: List[Any] = []
         for i, item in enumerate(obj):
             item_path = path_tuple + (str(i),)
             sanitized_item = self._sanitize(item, item_path)
