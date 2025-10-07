@@ -51,7 +51,7 @@ To install ArchReconstructAI:
 > To run the program, we use the package manager *uv*. [Guide to installation.](https://github.com/astral-sh/uv)
 
 ```bash
-git clone https://github.com/yourusername/ArchReconstructAI.git
+git clone https://github.com/simonskodt/arch-reconstruct-ai
 cd ArchReconstructAI
 uv run main.py
 ```
