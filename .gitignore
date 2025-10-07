@@ -336,3 +336,5 @@ pyrightconfig.json
 
 WARP.md
 .vscode*
+.github/*.md
+.DS_Store
