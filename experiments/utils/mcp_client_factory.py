@@ -155,3 +155,16 @@ def _replace(match: Match[str]):
     if value is None:
         raise ValueError(f"Missing environment variable: {name}")
     return value
+
+if __name__ == "__main__":
+    if len(sys.argv) > 2 and sys.argv[1] == "--config":
+        test_config = json.loads(sys.argv[2])
+        try:
+            result = save_mcp_config(test_config)
+            print("Save successful:", result)
+            cfg = load_mcp_config()
+            print("Load successful:", cfg)
+        except ValueError as e:
+            print("Loading failed:", e)
+    else:
+        print("Usage: python mcp_client_factory.py --config '<json_config>'")
