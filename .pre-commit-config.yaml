@@ -3,20 +3,29 @@ repos:
     rev: v4.5.0
     hooks:
       - id: trailing-whitespace
-        stages: [commit]
+        stages: [pre-commit]
       - id: end-of-file-fixer
-        stages: [commit]
+        stages: [pre-commit]
 
-  # Pylint: only run before pushing
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.8.23
+    hooks:
+    - id: uv-sync
+      stages: [pre-commit]
+      args: ["--locked", "--all-packages"] # if this fails, run 'uv lock' to regenerate exact dependency versions from pyproject.toml
+
+  # Pylint: only run on pre-commit (read-only check)
   - repo: local
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint
+        entry: uv run pylint
         language: system
         types: [python]
-        stages: [push]
+        stages: [pre-commit]
         require_serial: true
+        pass_filenames: true
         args:
           - "--rcfile=.pylintrc"
           - "--reports=no"

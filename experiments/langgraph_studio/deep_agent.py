@@ -1,7 +1,11 @@
 """A deep agent that uses tools to perform software architecture reconstruction."""
-from util import get_today_str, think_tool
-from prompts import SUBAGENT_USAGE_INSTRUCTIONS, RESEARCHER_INSTRUCTIONS
 from deepagents import create_deep_agent, SubAgent
+from experiments.langgraph_studio.util import get_today_str, think_tool
+from experiments.langgraph_studio.prompts import (
+    SUBAGENT_USAGE_INSTRUCTIONS,
+    RESEARCHER_INSTRUCTIONS
+)
+
 
 sub_agent_tools = [think_tool]
 research_sub_agent = SubAgent({
