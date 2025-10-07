@@ -7,7 +7,15 @@ repos:
       - id: end-of-file-fixer
         stages: [pre-commit]
 
-  # Pylint: only run before commit
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.8.23
+    hooks:
+    - id: uv-sync
+      stages: [pre-commit]
+      args: ["--locked", "--all-packages"] # if this fails, run 'uv lock' to regenerate exact dependency versions from pyproject.toml
+
+  # Pylint: only run on pre-commit (read-only check)
   - repo: local
     hooks:
       - id: pylint
@@ -17,6 +25,7 @@ repos:
         types: [python]
         stages: [pre-commit]
         require_serial: true
+        pass_filenames: true
         args:
           - "--rcfile=.pylintrc"
           - "--reports=no"
