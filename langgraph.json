@@ -1,7 +1,7 @@
 {
   "dependencies": [".", "./experiments/langgraph_studio"],
   "graphs": {
-    "agent": "./experiments/langgraph_studio/agent.py:agent",
+    "agent": "./src/agent/dummy_agent.py:agent",
     "vector_store": "experiments/rag/vector_store.py:agent"
   },
   "env": ".env"
