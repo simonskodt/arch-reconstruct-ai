@@ -2,7 +2,7 @@
   "dependencies": [".", "./experiments/langgraph_studio"],
   "graphs": {
     "agent": "./src/agent/dummy_agent.py:agent",
-   "vector_store": "experiments/rag/vector_store.py:agent"
+    "vector_store": "experiments/rag/vector_store.py:agent"
   },
   "env": ".env"
 }
