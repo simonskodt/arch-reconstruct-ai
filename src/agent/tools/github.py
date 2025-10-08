@@ -5,6 +5,7 @@ import os
 import shutil
 from typing import Optional, Dict, Any
 from git import Repo, GitCommandError
+from git.exc import NoSuchPathError, InvalidGitRepositoryError
 from langchain.tools import tool
 
 @tool("git_clone")
@@ -57,8 +58,5 @@ def git_clone_tool(
             "branch": repo.active_branch.name if not repo.head.is_detached else "detached",
             "error": None,
         }
-    except GitCommandError as e:
+    except (GitCommandError, NoSuchPathError, InvalidGitRepositoryError) as e:
         return {"success": False, "dest": dest, "error": str(e)}
-    except Exception as e:
-        return {"success": False, "dest": dest, "error": str(e)}
-    
