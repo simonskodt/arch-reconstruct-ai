@@ -79,14 +79,3 @@ LangGraph studio can be used to visualize, interact, and debug your agent locall
 1. Add LANGSMITH_API_KEY to your own local .env file. https://smith.langchain.com/o/e7bcbe7e-b691-491f-a1d0-f77247fd57df/settings/apikeys
 2. Add agent to langgraph.json file. 
 3. To start LangGraph Studio run: `uv run langgraph dev`
-
-## Run Deepagents UI 
-
-1. Clone the repository [github repository](https://github.com/langchain-ai/deep-agents-ui)
-2. create or copy the .env.local into the repository
-    ```
-    NEXT_PUBLIC_DEPLOYMENT_URL="http://127.0.0.1:2024" # Or your server URL
-    NEXT_PUBLIC_AGENT_ID=<your agent ID from langgraph.json>
-    ```
-3. `npm install`
-4. `npm run dev`
