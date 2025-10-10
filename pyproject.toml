@@ -25,6 +25,5 @@ dependencies = [
     "deepagents>=0.0.11rc1",
     "rich>=14.1.0",
     "crawl4ai>=0.7.4",
-    "asyncio>=4.0.0",
     "playwright>=1.55.0",
 ]
