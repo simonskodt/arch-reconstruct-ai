@@ -21,5 +21,6 @@ dependencies = [
     "pypdf>=6.1.1",
     "langchain-ollama>=0.3.10",
     "pylint>=3.3.9",
-    "deepagents>=0.0.10",
+    "deepagents>=0.0.11rc1",
+    "archlens>=0.2.9",
 ]
