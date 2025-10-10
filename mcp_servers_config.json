@@ -1,0 +1,9 @@
+{
+  "context7": {
+    "url": "https://mcp.context7.com/mcp",
+    "transport": "streamable_http",
+    "headers": {
+      "Authorization": "Bearer CONTEXT7_API_KEY"
+    }
+  }
+}
