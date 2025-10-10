@@ -21,9 +21,9 @@ dependencies = [
     "pypdf>=6.1.1",
     "langchain-ollama>=0.3.10",
     "pylint>=3.3.9",
-    "pylint>=3.3.9",
     "deepagents>=0.0.11rc1",
     "rich>=14.1.0",
     "crawl4ai>=0.7.4",
     "playwright>=1.55.0",
+    "archlens>=0.2.9",
 ]
