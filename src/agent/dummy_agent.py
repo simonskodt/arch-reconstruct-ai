@@ -11,9 +11,9 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware #, InterruptOnC
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 # pylint: disable=wrong-import-position
 from src.mcp.mcp_client_factory import create_mcp_client_from_config
-from .tools.github import git_clone_tool
-from .tools.human_in_the_loop.config import DEFAULT_INTERRUPT_CONFIG
-from .tools.human_in_the_loop.human_in_the_loop import(
+from src.agent.tools.github import git_clone_tool
+from src.agent.tools.human_in_the_loop.config import DEFAULT_INTERRUPT_CONFIG
+from src.agent.tools.human_in_the_loop.human_in_the_loop import(
     create_human_in_the_loop_configuration,
     apply_interrupt_config_or_default
 )
