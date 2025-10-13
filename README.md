@@ -116,29 +116,3 @@ Example `mcp_servers_config.json`:
     }
 }
 ```
-
-## Environment Variables for MCP Servers
-
-When adding an MCP server, if the connection requires a token or API key, set the corresponding environment variable in a `.env` file. It will be loaded automatically:
-
-```bash
-MCP1_API_KEY=secret
-```
-
-Example `mcp_servers_config.json`:
-
-```json
-{
-    "mcp1": {
-        "url": "https://mcp1.com/mcp",
-        "transport": "streamable_http",
-        "headers": {
-            "Authorization": "Bearer MCP1_API_KEY"
-        }
-    },
-    "mcp2": {
-        "url": "..",
-        "transport": ".."
-    }
-}
-```

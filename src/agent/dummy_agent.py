@@ -10,8 +10,8 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware #, InterruptOnC
 # NECESSARY: In order to enable imports from local modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 # pylint: disable=wrong-import-position
-from src.mcp.mcp_client_factory import create_mcp_client_from_config
 from src.agent.tools.github import git_clone_tool
+from src.mcp.mcp_client_factory import create_mcp_client_from_config
 from src.agent.tools.human_in_the_loop.config import DEFAULT_INTERRUPT_CONFIG
 from src.agent.tools.human_in_the_loop.human_in_the_loop import(
     create_human_in_the_loop_configuration,
