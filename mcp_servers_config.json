@@ -15,6 +15,16 @@
   "LangChainGitRepoMCP": {
     "url": "https://gitmcp.io/langchain-ai/langchain",
     "transport": "streamable_http"
-  }
-
+  },
+  "brave-search": {
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@brave/brave-search-mcp-server"
+    ],
+    "env": {
+      "BRAVE_API_KEY": "BRAVE_API_KEY"
+    }
+  },
 }
