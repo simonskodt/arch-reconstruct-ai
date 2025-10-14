@@ -8,6 +8,7 @@ from .navigation import (
     change_directory,
     navigate_to_repository,
     list_repositories,
+    _resolve_repository_path,
 )
 from .setup import (
     setup_directories,
@@ -59,6 +60,7 @@ def setup_navigation_workspace() -> dict:
         }
 
 setup_navigation_workspace()  # Ensure workspace is set up on import
+
 __all__ = [
     "get_navigation_tools",
     "setup_navigation_workspace",
@@ -69,4 +71,5 @@ __all__ = [
     "list_repositories",
     "setup_directories",
     "create_directory_in_root",
+    "_resolve_repository_path",
 ]
