@@ -10,18 +10,18 @@ from langchain.agents import create_agent
 # NECESSARY: In order to enable imports from local modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 # pylint: disable=wrong-import-position
-from src.agent.tools.github import git_clone_tool
 from src.mcp.mcp_client_factory import create_mcp_client_from_config
+from src.utils.validate_tools import ToolSchemaFixer
+from src.agent.tools.navigation import get_navigation_tools
 
 mcp_client = create_mcp_client_from_config()
 mcp_tools = asyncio.run(mcp_client.get_tools())
-
-tools = [git_clone_tool]
-combine_tools = tools + mcp_tools
-
-MODEL = "openai:gpt-4.1-nano"
+ToolSchemaFixer.fix_empty_properties(mcp_tools) # Fix tools with empty properties (MCP issue)
+navigation_tools = get_navigation_tools()
+tools = mcp_tools + navigation_tools
+MODEL = "openai:gpt-5-nano"
 agent = create_agent(
     MODEL,
-    tools=combine_tools,
-    prompt="You are a helpful assistant.",
+    tools=tools,
+    system_prompt="You are a helpful assistant.",
 )
