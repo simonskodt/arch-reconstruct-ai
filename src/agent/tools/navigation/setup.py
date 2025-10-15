@@ -1,60 +1,39 @@
 """Ensure directories exist for agent operations."""
-import os
-from pathlib import Path
-from dotenv import load_dotenv
-from langchain.tools import tool
-from .config import REQUIRED_DIRS
+from src.agent.tools.navigation.file_management import make_directory
+from src.agent.tools.navigation.config import (
+    REQUIRED_DIRS,
+    AGENT_WORKSPACE_BASE_PATH,
+)
 
-@tool("setup_directories")
-def setup_directories(
-    path_name: str = "agent_workspace",
-    required_dirs: list[str] | None = None
-) -> dict[str, list[str]]:
-    """Ensure necessary directories exist."""
+def setup_agent_workspace():
+    """Initialize the workspace by creating required directories.
 
-    if required_dirs is None:
-        required_dirs = REQUIRED_DIRS
-
-    created_dirs = []
-    for dir_name in required_dirs:
-        dir_path = Path(path_name) / dir_name
-        if not dir_path.exists():
-            dir_path.mkdir(parents=True, exist_ok=True)
-            created_dirs.append(str(dir_path))
-
-    return {"created": created_dirs}
-
-@tool("create_directory_in_root")
-def create_directory_in_root(dirname: str = "agent_workspace") -> str:
-    """Create a directory at the workspace base path (if dirname matches base) or within it.
-
-    If AGENT_WORKSPACE_BASE_PATH already ends with the directory name you want to create,
-    this will create the base path directly without duplication.
+    Returns:
+        Dictionary with setup results including created and existing directories
     """
-    load_dotenv()
+    # Ensure base workspace directory exists using make_directory
+    # Pass the parent directory and the workspace name
+    agent_root = make_directory(
+        dirname=AGENT_WORKSPACE_BASE_PATH.name,
+        path=AGENT_WORKSPACE_BASE_PATH.parent
+    )
 
-    root_dir = os.getenv("AGENT_WORKSPACE_BASE_PATH")
-    if root_dir is None:
-        raise ValueError("AGENT_WORKSPACE_BASE_PATH environment variable is not set")
+    # Create required subdirectories
+    dirs_result = {"created": [], "existing": []}
+    for dir_name in REQUIRED_DIRS:
+        result = make_directory(dir_name)
+        try:
+            if result["status"] == "created":
+                dirs_result["created"].append(result["path"])
+            elif result["status"] == "exists":
+                dirs_result["existing"].append(result["path"])
+        except Exception as e:
+            print(f"Result was: {result}")
+            print(f"Error processing directory {dir_name}: {e}")
 
-    base_path = Path(root_dir).resolve()
-
-    # Check if the base path already ends with the dirname
-    # e.g., if AGENT_WORKSPACE_BASE_PATH = "arch-reconstruct-ai/agent-workspace"
-    # and dirname = "agent_workspace" or "agent-workspace"
-    if base_path.name == dirname or base_path.name == dirname.replace('_', '-'):
-        target_dir = base_path
-    else:
-        # Create as a subdirectory of the base path
-        target_dir = base_path / dirname
-
-    # Check if it already exists
-    if target_dir.exists():
-        if target_dir.is_dir():
-            return f"Directory already exists at {target_dir}"
-        return f"Error: Path exists but is not a directory: {target_dir}"
-
-    # Create the directory
-    target_dir.mkdir(parents=True, exist_ok=True)
-
-    return f"Successfully created directory at {target_dir}"
+    return {
+        "status": {
+            "base_workspace": agent_root,
+            "directories": dirs_result
+        },
+    }
