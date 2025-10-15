@@ -2,79 +2,96 @@
 import os
 from pathlib import Path
 from typing import List
-from dotenv import load_dotenv
 from langchain.tools import tool
-from src.agent.tools.navigation.config import REPOSITORIES_DIR
-
-load_dotenv()
-
-def _get_workspace_root() -> Path:
-    """Get workspace root directory from environment variable."""
-    root_dir = os.getenv("AGENT_WORKSPACE_BASE_PATH")
-    if not root_dir:
-        raise ValueError("AGENT_WORKSPACE_BASE_PATH environment variable is not set")
-    return _normalize_path(root_dir)
+from src.agent.tools.navigation.util import normalize_path
+from src.agent.tools.navigation.config import (REPOSITORIES_DIR, AGENT_WORKSPACE_BASE_PATH,)
+from src.agent.tools.navigation.guardrails import enforce_workspace_boundary, _is_within_workspace
 
 
-def _normalize_path(path: str) -> Path:
-    """Normalize a path across OSes and WSL/Windows interop."""
-    path = str(path).strip()
+@tool("find_files")
+@enforce_workspace_boundary
+def find_files(path: str = ".", keyword: str = "", recursive: bool = True) -> List[str]:
+    """
+    Find all files from the given path (default cwd), filtering optionally by keyword.
 
-    # Convert WSL paths (/mnt/c/...) -> Windows (C:\...)
-    if path.startswith("/mnt/") and len(path) > 6 and path[5].isalpha() and path[6] == "/":
-        drive = path[5].upper()
-        rest = path[7:]
-        path = f"{drive}:/{rest}"
-
-    # Convert Git Bash /c/... -> Windows C:/...
-    elif path.startswith("/") and len(path) > 2 and path[1].isalpha() and path[2] == "/":
-        drive = path[1].upper()
-        rest = path[3:]
-        path = f"{drive}:/{rest}"
-
-    return Path(path).resolve()
+    Args:
+        path: Starting path for search (default is current directory)
+        keyword: Optional keyword to filter filenames
+        recursive: If True, search recursively; if False, only search immediate directory
+    """
+    return _find_files(path=path, keyword=keyword, recursive=recursive)
 
 
-def _is_within_workspace(path: str) -> bool:
-    """Check if path is within the allowed workspace directory."""
+@tool("list_files_in_directory")
+@enforce_workspace_boundary
+def list_files_in_directory(keyword: str = "") -> List[str]:
+    """
+    List all files in the current working directory, filtering optionally by keyword.
+
+    This is a convenience wrapper around the file finding logic.
+    """
+    result = _find_files(path=".", keyword=keyword, recursive=False)
+    if isinstance(result, list) and result and not result[0].startswith("Error:"):
+        return [os.path.basename(f) for f in result]
+    return result
+
+def _find_files(path: str = ".", keyword: str = "", recursive: bool = True) -> List[str]:
+    """
+    Core implementation for finding files.
+
+    Args:
+        path: Starting path for search (default is current directory)
+        keyword: Optional keyword to filter filenames
+        recursive: If True, search recursively; if False, only search immediate directory
+    """
     try:
-        workspace_root = _get_workspace_root()
-        abs_path = _normalize_path(path)
+        start_path = normalize_path(path)
 
-        # Allow access to workspace root and its subdirectories
-        abs_path.relative_to(workspace_root)
-        return True
-    except ValueError:
-        # relative_to raises ValueError if path is not a subpath
-        return False
+        if not _is_within_workspace(str(start_path)):
+            return [f"Error: Path '{path}' is outside the allowed workspace"]
 
+        if not start_path.exists():
+            return [f"Error: Path '{path}' does not exist"]
 
-def _resolve_repository_path(repo_name: str) -> Path:
-    """Get the full path to a repository by name."""
-    repository_root = (_get_workspace_root() / REPOSITORIES_DIR).resolve()
+        if not start_path.is_dir():
+            return [f"Error: '{path}' is not a directory"]
 
-    if repo_name and repo_name.strip():
-        return _normalize_path(str(repository_root / repo_name))
+        files = []
 
-    return repository_root
+        if recursive:
+            # Recursive search using os.walk
+            for root, _, files_in_dir in os.walk(start_path):
+                # Skip .langgraph_api directory
+                if ".langgraph_api" in root:
+                    continue
+                for file in files_in_dir:
+                    if not keyword or keyword.strip() == "" or keyword in file:
+                        files.append(os.path.join(root, file))
+        else:
+            # Non-recursive search - only current directory
+            dir_items = os.listdir(start_path)
+            no_filter = not keyword or keyword.strip() == ""
+            files = [
+                str(start_path / item) for item in dir_items
+                if item != ".langgraph_api"
+                and (no_filter or keyword in item)
+                and (start_path / item).is_file()
+            ]
 
-
-@tool("list_directory")
-def list_directory() -> List[str]:
-    """List all files and directories in the current working directory."""
-    try:
-        return os.listdir(".")
+        return files
     except OSError as e:
-        return [f"Error listing directory: {e}"]
+        return [f"Error finding files: {e}"]
 
 
 @tool("get_current_directory")
+@enforce_workspace_boundary
 def get_current_directory() -> str:
     """Return the current working directory path."""
     return os.getcwd()
 
 
 @tool("change_directory")
+@enforce_workspace_boundary
 def change_directory(path: str) -> str:
     """Change the current working directory with path resolution and safety checks.
 
@@ -116,6 +133,7 @@ def change_directory(path: str) -> str:
 
 
 @tool("navigate_to_repository")
+@enforce_workspace_boundary
 def navigate_to_repository(repo_name: str) -> str:
     """Navigate directly to a specific repository in the workspace."""
     try:
@@ -135,10 +153,11 @@ def navigate_to_repository(repo_name: str) -> str:
 
 
 @tool("list_repositories")
+@enforce_workspace_boundary
 def list_repositories() -> str:
     """List all available repositories in the workspace."""
     try:
-        repository_root = (_get_workspace_root() / REPOSITORIES_DIR).resolve()
+        repository_root = (AGENT_WORKSPACE_BASE_PATH / REPOSITORIES_DIR).resolve()
 
         if not repository_root.exists():
             return f"Error: Workspace root not found at {repository_root}"
@@ -154,3 +173,12 @@ def list_repositories() -> str:
 
     except Exception as e:
         return f"Error listing repositories: {e}"
+
+def _resolve_repository_path(repo_name: str) -> Path:
+    """Get the full path to a repository by name."""
+    repository_root = (AGENT_WORKSPACE_BASE_PATH / REPOSITORIES_DIR).resolve()
+
+    if repo_name and repo_name.strip():
+        return normalize_path(str(repository_root / repo_name))
+
+    return repository_root
