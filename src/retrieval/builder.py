@@ -10,6 +10,7 @@ from src.retrieval.vector_store import (
     create_persistent_vector_store_from_pdf,
     load_persistent_vector_store
 )
+from src.retrieval.config import DEFAULT_CHROMA_DB
 
 _BASE_DIR = Path(__file__).parent
 emb = get_ollama_embeddings()
@@ -36,15 +37,16 @@ if arch_pdf.exists():
 
 
 # Diagrams
-DIAGRAM_STORE_PATH = f"./chroma_store_{emb.model}"
+DIAGRAM_STORE_PATH = f"{DEFAULT_CHROMA_DB}_{emb.model}"
 DIAGRAM_COLLECTION_NAME = "diagram_store"
+DIAGRAM_DOCS_PATH = \
+"C:\\Users\\thoma\\Desktop\\arch-reconstruct-ai\\PlantUML_Language_Reference_Guide_en.pdf"
 
 if Path(DIAGRAM_STORE_PATH).exists():
     diag_store = load_persistent_vector_store(emb, DIAGRAM_STORE_PATH, DIAGRAM_COLLECTION_NAME)
 else:
-    DIAGRAM_DOCS_PATH = "" \
-    "C:\\Users\\thoma\\Desktop\\arch-reconstruct-ai\\PlantUML_Language_Reference_Guide_en.pdf"
     diag_docs = load_pdf_documents(DIAGRAM_DOCS_PATH, chunk_size=500, chunk_overlap=75)
+
     diag_store = create_persistent_vector_store_from_pdf(embeddings=emb,
         pdf_path=DIAGRAM_DOCS_PATH,
         save_path=DIAGRAM_STORE_PATH,

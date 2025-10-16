@@ -3,7 +3,7 @@ Create an VectorStore and wrap its retriever as a LangChain tool.
 """
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_core.tools import create_retriever_tool
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 
 from .embeddings import get_default_embeddings
 from .loaders import load_pdf_documents
