@@ -1,17 +1,19 @@
 """
 Build in-memory vector stores and retriever tools for standard knowledge bases.
 """
-
 from pathlib import Path
-from .embeddings import get_openai_embeddings
-from .loaders import load_pdf_documents
-from .vector_store import (
+from src.retrieval.embeddings import get_ollama_embeddings
+from src.retrieval.loaders import load_pdf_documents
+from src.retrieval.vector_store import (
     create_inmemory_vector_store,
     create_retriever_tool_from_store,
+    create_persistent_vector_store_from_pdf,
+    load_persistent_vector_store
 )
 
 _BASE_DIR = Path(__file__).parent
-emb = get_openai_embeddings()
+emb = get_ollama_embeddings()
+
 
 # Architecture KB
 arch_pdf = (
@@ -19,27 +21,40 @@ arch_pdf = (
     / "architecture_kb"
     / "An Approach to Software Architecture Description Using UML.pdf"
 )
-arch_docs = load_pdf_documents(
-    str(arch_pdf),
-    chunk_size=800,
-    chunk_overlap=120,
-)
-arch_store = create_inmemory_vector_store(embeddings=emb, documents=arch_docs)
-arch_tool = create_retriever_tool_from_store(
-    arch_store,
-    name="architecture_retriever",
-    description="Retrieve software architecture and reconstruction concepts."
-)
+if arch_pdf.exists():
+    arch_docs = load_pdf_documents(
+        str(arch_pdf),
+        chunk_size=800,
+        chunk_overlap=120,
+    )
+    arch_store = create_inmemory_vector_store(emb, documents=arch_docs)
+    arch_tool = create_retriever_tool_from_store(
+        arch_store,
+        name="architecture_retriever",
+        description="Retrieve software architecture and reconstruction concepts."
+    )
 
-# Diagrams KB
-"""
-diag_docs = load_pdf_documents("path/to/mermaid_uml.pdf", chunk_size=500, chunk_overlap=75)
-diag_store = create_inmemory_vector_store(embeddings=emb, documents=diag_docs)
+
+# Diagrams
+DIAGRAM_STORE_PATH = f"./chroma_store_{emb.model}"
+DIAGRAM_COLLECTION_NAME = "diagram_store"
+
+if Path(DIAGRAM_STORE_PATH).exists():
+    diag_store = load_persistent_vector_store(emb, DIAGRAM_STORE_PATH, DIAGRAM_COLLECTION_NAME)
+else:
+    DIAGRAM_DOCS_PATH = "" \
+    "C:\\Users\\thoma\\Desktop\\arch-reconstruct-ai\\PlantUML_Language_Reference_Guide_en.pdf"
+    diag_docs = load_pdf_documents(DIAGRAM_DOCS_PATH, chunk_size=500, chunk_overlap=75)
+    diag_store = create_persistent_vector_store_from_pdf(embeddings=emb,
+        pdf_path=DIAGRAM_DOCS_PATH,
+        save_path=DIAGRAM_STORE_PATH,
+        collection_name=DIAGRAM_COLLECTION_NAME,
+    )
+
 diag_tool = create_retriever_tool_from_store(
     diag_store,
     name="diagram_retriever",
     description="Retrieve diagram syntax and examples (Mermaid, UML)."
 )
-"""
 
-tools = [arch_tool]
+tools = [diag_tool]
