@@ -32,6 +32,12 @@ wheels/
 # Langgraph studio files
 .Langgraph_api/*
 
+# ChromaDB database files
+db/*
+
+# agent workspace files
+agent_workspace/*
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
