@@ -7,7 +7,6 @@ import subprocess
 import requests
 import pytest
 from dotenv import load_dotenv
-
 from src.agent.tools.drawing.config import ExportFormats, SUCCESS_STATUS_CODE, PLANT_UML_SERVER_URL
 from src.agent.tools.drawing.draw_uml import (
     create_uml_diagram,
@@ -16,13 +15,16 @@ from src.agent.tools.drawing.draw_uml import (
     _validate_uml,
     _export_uml
 )
+from tests.uml_examples import UML_DIAGRAMS
 
+
+PLANTUML_INTEGRATION_TESTS_KEY = "PLANTUML_INTEGRATION_TESTS"
 @pytest.fixture(scope="session", autouse=True)
 def ensure_plantuml_server():
     """Ensure PlantUML server is running before tests."""
     server_url = PLANT_UML_SERVER_URL
     load_dotenv()
-    skip = os.getenv("PLANTUML_INTEGRATION_TESTS")
+    skip = os.getenv(PLANTUML_INTEGRATION_TESTS_KEY)
     if skip is None or skip.lower() != 'true':
         pytest.skip("PlantUML tests skipped")
 
@@ -73,27 +75,8 @@ def ensure_plantuml_server():
         "docker run -d -p 8080:8080 --name plantumlserver plantuml/plantuml-server:jetty")
 
 
-# Test data for parameterized tests
-UML_CONTENTS = [
-    # Basic sequence diagram
-    ("@startuml Basic\nAlice -> Bob: Hello\nBob --> Alice: Hi\n@enduml",
-     "basic_sequence"),
 
-    # Class diagram
-    ("@startuml Class\nclass User {\n  +name: String\n  +login()\n}\n@enduml",
-     "class_diagram"),
-
-    # Activity diagram
-    ("@startuml Activity\nstart\n:Action 1;\nif (condition) then (yes)\n  \
-     :Action 2;\nelse (no)\n  :Action 3;\nendif\nstop\n@enduml",
-     "activity_diagram"),
-
-    # Use case diagram
-    ("@startuml UseCase\n:User: --> (Login)\n:User: --> (View Profile)\n@enduml",
-     "use_case_diagram"),
-]
-
-@pytest.mark.parametrize("uml_content, diagram_type", UML_CONTENTS)
+@pytest.mark.parametrize("uml_content, diagram_type", UML_DIAGRAMS)
 def test_create_uml_saves_file_to_path(uml_content, diagram_type):
     """Test creating a valid UML diagram with different content types."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -122,7 +105,7 @@ def test_create_invalid_uml():
         assert not os.path.exists(save_path)  # Should not create file for invalid UML
 
 
-@pytest.mark.parametrize("uml_content, diagram_type", UML_CONTENTS)
+@pytest.mark.parametrize("uml_content, diagram_type", UML_DIAGRAMS)
 @pytest.mark.parametrize("format_type", get_args(ExportFormats))
 def test_export_uml_to_exportable_formats(uml_content, diagram_type, format_type):
     """Test exporting UML to different formats with various content types."""
@@ -142,7 +125,7 @@ def test_export_uml_to_exportable_formats(uml_content, diagram_type, format_type
         assert export_result == output_path
         assert os.path.exists(output_path)
 
-@pytest.mark.parametrize("uml_content, _", UML_CONTENTS)
+@pytest.mark.parametrize("uml_content, _", UML_DIAGRAMS)
 @pytest.mark.parametrize("format_type", get_args(ExportFormats))
 def test_export_uml_in_memory(uml_content, _, format_type):
     """Test exporting UML to in-memory content."""

@@ -9,25 +9,10 @@ from src.agent.tools.drawing.draw_uml import (
 
 )
 
-# Test data for parameterized tests
-UML_CONTENTS = [
-    # Basic sequence diagram
-    ("@startuml Basic\nAlice -> Bob: Hello\nBob --> Alice: Hi\n@enduml",
-     "basic_sequence"),
-    # Class diagram
-    ("@startuml Class\nclass User {\n  +name: String\n  +login()\n}\n@enduml",
-     "class_diagram"),
-    # Activity diagram
-    ("@startuml Activity\nstart\n:Action 1;\nif (condition) then (yes)\n  \
-     :Action 2;\nelse (no)\n  :Action 3;\nendif\nstop\n@enduml",
-     "activity_diagram"),
-    # Use case diagram
-    ("@startuml UseCase\n:User: --> (Login)\n:User: --> (View Profile)\n@enduml",
-     "use_case_diagram"),
-]
+from tests.uml_examples import UML_DIAGRAMS
 
 
-@pytest.mark.parametrize("uml_content, diagram_type", UML_CONTENTS)
+@pytest.mark.parametrize("uml_content, diagram_type", UML_DIAGRAMS)
 def test_save_uml(uml_content, diagram_type):
     """Test saving UML content to a file."""
     with tempfile.TemporaryDirectory() as temp_dir:
