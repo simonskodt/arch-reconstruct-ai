@@ -29,3 +29,14 @@ dependencies = [
     "chromadb>=1.1.1",
     "langchain-chroma>=0.2.6",
 ]
+
+[dependency-groups]
+test = [
+    "pytest>=8.4.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit_tests", "tests/integration_tests"]
+python_files = ["test_*.py", "*_test.py", "*_tests.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

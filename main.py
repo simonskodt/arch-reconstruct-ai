@@ -12,7 +12,7 @@ from src import run
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for the ArchReconstructAI application.
-    
+
     Returns:
         argparse.Namespace: The parsed command-line arguments.
     """
