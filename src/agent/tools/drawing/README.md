@@ -28,9 +28,9 @@ Update your VS Code `settings.json`:
 
 ```json
 {
-  "plantuml.server": "http://localhost:8080/plantuml",
+  "plantuml.server": "http://localhost:8080/",
   "plantuml.render": "PlantUMLServer",
-  "plantuml.exportOutDir": "docs/diagrams/out"
+  "plantuml.exportOutDir": "/diagrams/out"
 }
 ```
 Test the setup at: http://localhost:8080/
