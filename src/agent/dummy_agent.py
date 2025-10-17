@@ -9,7 +9,7 @@ from langchain.agents import create_agent
 # NECESSARY: In order to enable imports from local modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 # pylint: disable=wrong-import-position
-# from src.utils.services import check_service_availability
+from src.utils.services import check_service_availability
 
 # tools
 from src.retrieval.builder import diag_tool
@@ -20,7 +20,7 @@ from src.agent.tools.github import (
     load_extracted_repository
 )
 
-# check_service_availability()
+check_service_availability()
 
 tools = [
     git_clone_tool,
