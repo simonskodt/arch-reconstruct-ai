@@ -27,3 +27,14 @@ dependencies = [
     "playwright>=1.55.0",
     "archlens>=0.2.9",
 ]
+
+[dependency-groups]
+test = [
+    "pytest>=8.4.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit_tests", "tests/integration_tests"]
+python_files = ["test_*.py", "*_test.py", "*_tests.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
