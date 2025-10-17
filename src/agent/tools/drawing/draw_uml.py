@@ -2,14 +2,16 @@
 This module provides tools for drawing UML diagrams.
 """
 import os
-from typing import Optional
+from typing import Optional, get_args
 
 from langchain.tools import tool
 import requests
 from src.agent.tools.drawing.config import (
     PLANT_UML_SERVER_URL,
     ENCODING,
-    PREPROCESSOR_OPTION,
+    DEFAULT_OUTPUT_FORMAT,
+    VALIDATION_OUTPUT_FORMAT,
+    SUCCESS_STATUS_CODE,
     ExportFormats
 )
 from src.agent.tools.drawing.util import encode
@@ -92,14 +94,22 @@ def _load_uml(file_path: str) -> str:
     with open(file_path, "r", encoding=ENCODING) as file:
         return file.read()
 
-def _validate_uml(uml_diagram: str) -> str | None:
-    """Validates the UML diagram syntax."""
-    if uml_diagram.startswith("@startuml") and uml_diagram.endswith("@enduml"):
-        result = _export_uml(uml_diagram, PREPROCESSOR_OPTION, None)
-        if isinstance(result, str) and "Syntax Error" in result:
-            return result
+def _validate_uml(
+        uml_diagram: str,
+        format_type: ExportFormats = VALIDATION_OUTPUT_FORMAT
+    ) -> str | None:
+    """Validates the UML diagram syntax using the specified format.
+
+    Returns:
+        Error message if validation fails, None if valid
+    """
+    if not (uml_diagram.startswith("@startuml") and uml_diagram.endswith("@enduml")):
+        return "Error: UML diagram must start with '@startuml' and end with '@enduml'."
+
+    response = _export_uml(uml_diagram, None, format_type)
+    if response == SUCCESS_STATUS_CODE:
         return None
-    return "Error: UML diagram must start with '@startuml' and end with '@enduml'."
+    return response
 
 def _ensure_uml_tags(diagram_content: str, name: str) -> str:
     """Ensures the UML diagram content has proper start and end tags."""
@@ -120,14 +130,17 @@ def _ensure_uml_tags(diagram_content: str, name: str) -> str:
     Returns:
         The path where the exported diagram was saved, or the raw content/error message if output_path is None
     """)
-def export_uml(file_path: str, format_type: ExportFormats, output_path: str | None) -> str:
+def export_uml(
+    file_path: str, output_path: str,
+    format_type: ExportFormats = DEFAULT_OUTPUT_FORMAT
+) -> str:
     """Exports the UML diagram to the specified format using PlantUML server."""
-    return _export_uml(_load_uml(file_path), format_type, output_path)
+    return _export_uml(_load_uml(file_path), output_path, format_type)
 
 def _export_uml(
     uml_diagram: str,
-    format_type: ExportFormats,
-    output_path: Optional[str],
+    output_path: Optional[str] = None,
+    format_type: ExportFormats = DEFAULT_OUTPUT_FORMAT,
     server_url: str = PLANT_UML_SERVER_URL
 ) -> str :
     """Exports the UML diagram to the specified format using PlantUML server."""
@@ -135,14 +148,22 @@ def _export_uml(
     url = f"{server_url}/{format_type}/{uml_content_encoded}"
     try:
         response = requests.get(url, timeout=20)
+        # Check if the response is valid
         if response.status_code == 200:
             if output_path is None:
-                return response.content.decode(ENCODING)
+                return SUCCESS_STATUS_CODE
             with open(output_path, 'wb') as f:
                 f.write(response.content)
             return output_path
-        error_msg = response.text
-        return error_msg
+
+        # an error occurred
+        if format_type == VALIDATION_OUTPUT_FORMAT:
+            error_msg = response.text
+            return error_msg
+        return f"Error {response.status_code}: \
+        occured when trying to export the UML diagram as {format_type}, \
+        try a another format {get_args(ExportFormats)}"
+
     except Exception as e:
         error_msg = f"Requests failed with error: {e}"
         return error_msg
