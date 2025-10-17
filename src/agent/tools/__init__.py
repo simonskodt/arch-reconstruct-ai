@@ -1,1 +1,1 @@
-"""tool package initializer."""
+"""Agent tools package."""
