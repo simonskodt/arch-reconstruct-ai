@@ -1,19 +1,10 @@
 # Drawing Tools Module
-
-## Features
-
+This module defines the prerequisites for the agent to generate and render diagrams using PlantUML. Ensure Docker is installed and running on your system to host the PlantUML server locally.
 ## Quick Start
 
 ### PlantUML Setup
 
-#### Option 1: Local Installation (Recommended)
-1. Install the PlantUML VS Code extension:
-   - Visit: https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml
-   - Or search for "PlantUML" in VS Code extensions
-
-2. VS Code will automatically install PlantUML locally
-
-#### Option 2: Docker Setup
+#### Setup server for Agent
 ```bash
 # Pull the PlantUML server image
 docker pull plantuml/plantuml-server:jetty
@@ -22,9 +13,16 @@ docker pull plantuml/plantuml-server:jetty
 docker run -d -p 8080:8080 --name plantumlserver plantuml/plantuml-server:jetty
 ```
 
+#### Local testing and inspection of UML diagrams in VS code
+1. Install the PlantUML VS Code extension:
+   - Visit: https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml
+   - Or search for "PlantUML" in VS Code extensions
 
-#### VS Code Configuration
-Update your VS Code `settings.json`:
+2. VS Code will automatically install PlantUML locally
+3. Access any plantuml file and use th VS code preview
+
+#### Optional VS Code Configuration to use local server
+Update VS Code `settings.json`:
 
 ```json
 {
@@ -33,4 +31,3 @@ Update your VS Code `settings.json`:
   "plantuml.exportOutDir": "/diagrams/out"
 }
 ```
-Test the setup at: http://localhost:8080/
