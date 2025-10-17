@@ -18,5 +18,5 @@ MODEL = "openai:gpt-4.1-nano"
 agent = create_agent(
     MODEL,
     tools=tools,
-    prompt="You are a helpful assistant.",
+    system_prompt="You are a helpful assistant.",
 )
