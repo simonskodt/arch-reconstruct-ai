@@ -52,11 +52,11 @@ tools = get_drawing_tools() + \
 # Agent Middleware
 MODEL = "openai:gpt-{number}-nano"
 summarization_tool = SummarizationMiddleware(MODEL.format(number="4.1"),
-                                             max_tokens_before_summary=7500,
+                                             max_tokens_before_summary=10_000,
                                              messages_to_keep=5)
 
 
-always_included_tools = ["find_files", "get_current_directory"]
+always_included_tools = []
 tool_selector = LLMToolSelectorMiddleware(
     model=MODEL.format(number="4.1"),
     system_prompt= \
