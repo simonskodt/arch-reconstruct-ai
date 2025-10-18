@@ -15,10 +15,11 @@ from src.agent.tools.drawing.config import (
     ExportFormats
 )
 from src.agent.tools.drawing.util import encode
+from src.agent.tools.navigation import resolve_repository_path, list_repositories
 
 
 @tool("create_uml")
-def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
+def create_uml_diagram(name: str, diagram_content: str, repo_name: str) -> str:
     """Draws a UML diagram and saves it to the specified path.
 
     Args:
@@ -33,16 +34,17 @@ def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
     full_content = _ensure_uml_tags(diagram_content, name)
     if (err_msg := _validate_uml(full_content)):
         return err_msg
-    return _save_uml(full_content, path, False)
+    return _save_uml(full_content, name, repo_name, False)
 
 
 
 @tool
-def update_uml(uml_content: str, file_path: str) -> str:
+def update_uml(uml_content: str, name: str, repo_name: str) -> str:
     """Update an existing UML diagram with changes and save to file.
 
     Args:
         uml_content: The new UML diagram content
+        name: The name of the UML diagram
         file_path: Path to the existing UML file
 
     Returns:
@@ -51,26 +53,35 @@ def update_uml(uml_content: str, file_path: str) -> str:
     # Load current content for validation
     if (err_msg := _validate_uml(uml_content)):
         return err_msg
-    return _save_uml(uml_content, file_path, True)
+    return _save_uml(uml_content, name, repo_name, True)
 
 @tool
-def save_uml(uml_description: str, file_path: str, overwrite: bool = False) -> str:
+def save_uml(uml_description: str, name: str, repo_name: str, overwrite: bool = False) -> str:
     """Saves a UML diagram to a file.
 
     Args:
         uml_description: The complete UML diagram content
-        file_path: Path where to save the diagram
+        name: The name of the UML diagram
+        repo_name: Name of the repository where the diagram should be saved
         overwrite: Whether to overwrite the file if it exists
 
     Returns:
         The path where the diagram was saved
     """
-    return _save_uml(uml_description, file_path, overwrite)
 
-def _save_uml(uml_description: str, file_path: str, overwrite: bool) -> str:
+    return _save_uml(uml_description, name, repo_name, overwrite)
+
+def _save_uml(uml_description: str, name:str, repo_name: str, overwrite: bool) -> str:
     """Saves a UML diagram to a file."""
-    if not file_path.endswith(".puml"):
-        file_path = file_path.rsplit(".", 1)[0] + ".puml"
+    validated_repo_name = repo_name.strip().lower()
+    repo_input = list_repositories.invoke({}).strip().lower()
+    if validated_repo_name not in repo_input.split(", "):
+        return f"Error: Repository '{repo_name}' not found. {repo_input}"
+
+    if not name.endswith(".puml"):
+        name = name.rsplit(".", 1)[0] + ".puml"
+    full_repo_path = (resolve_repository_path(validated_repo_name) / name).resolve()
+    file_path = os.path.join(full_repo_path, name)
     if not overwrite and os.path.exists(file_path):
         return f"Error: File {file_path} already exists."
     try:

@@ -31,7 +31,6 @@ class PlantUMLDocumentationTool:
                                            and self.upstash_doc_tool_name in tool.name), None)
         self.log_file = log_file
 
-    @tool("plantuml_documentation_search")
     def plantuml_documentation_search(
         self,
         query: str,
@@ -54,7 +53,6 @@ class PlantUMLDocumentationTool:
         """
         return self._search_plantuml_docs(query, tokens or 5000)
 
-    @tool("plantuml_syntax_lookup")
     def plantuml_syntax_lookup(
         self,
         diagram_type: str,
@@ -96,7 +94,7 @@ class PlantUMLDocumentationTool:
                 return error_msg
 
             # Call the documentation tool with PlantUML specific parameters
-            result = self.upstash_plantuml_tool.run({
+            result = self.upstash_plantuml_tool.invoke({
                 "context7CompatibleLibraryID": self.plantuml_library_id,
                 "tokens": tokens,
                 "topic": query
@@ -161,7 +159,14 @@ class PlantUMLDocumentationTool:
         Returns:
             List of tool instances that can be used by LangChain agents
         """
-        return [
-            self.plantuml_documentation_search,
-            self.plantuml_syntax_lookup
-        ]
+        @tool("plantuml_documentation_search")
+        def search_doc(query: str, tokens: Optional[int] = 5000) -> str:
+            """Search PlantUML documentation and syntax reference."""
+            return self.plantuml_documentation_search(query, tokens)
+
+        @tool("plantuml_syntax_lookup")
+        def lookup_syntax(diagram_type: str, specific_feature: Optional[str] = None) -> str:
+            """Get specific PlantUML syntax for diagram types and features."""
+            return self.plantuml_syntax_lookup(diagram_type, specific_feature)
+
+        return [search_doc, lookup_syntax]
