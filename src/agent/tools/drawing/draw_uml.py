@@ -24,7 +24,7 @@ def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
     Args:
         name: The name/title of the UML diagram
         diagram_content: The PlantUML diagram content/description
-        path: The file path where to save the diagram
+        path: The file path where to save the diagram as puml file
 
     Returns:
         The path where the diagram was saved
@@ -69,11 +69,15 @@ def save_uml(uml_description: str, file_path: str, overwrite: bool = False) -> s
 
 def _save_uml(uml_description: str, file_path: str, overwrite: bool) -> str:
     """Saves a UML diagram to a file."""
+    if not file_path.endswith(".puml"):
+        file_path = file_path.rsplit(".", 1)[0] + ".puml"
     if not overwrite and os.path.exists(file_path):
         return f"Error: File {file_path} already exists."
-
-    with open(file_path, "w", encoding=ENCODING) as file:
-        file.write(uml_description)
+    try:
+        with open(file_path, "w", encoding=ENCODING) as file:
+            file.write(uml_description)
+    except Exception as e:
+        return f"Error saving UML file: {e}"
 
     return file_path
 
@@ -82,7 +86,7 @@ def load_uml(file_path: str) -> str:
     """Loads a UML diagram from a file.
 
     Args:
-        file_path: Path to the UML file to load
+        file_path: Path to the UML file to load the file type has to be of type .puml
 
     Returns:
         The content of the UML diagram
@@ -91,8 +95,11 @@ def load_uml(file_path: str) -> str:
 
 def _load_uml(file_path: str) -> str:
     """Loads a UML diagram from a file."""
-    with open(file_path, "r", encoding=ENCODING) as file:
-        return file.read()
+    try:
+        with open(file_path, "r", encoding=ENCODING) as file:
+            return file.read()
+    except Exception as e:
+        return f"Error loading UML file: {e}"
 
 def _validate_uml(
         uml_diagram: str,
