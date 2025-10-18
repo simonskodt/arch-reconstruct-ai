@@ -105,13 +105,14 @@ def change_directory(path: str) -> str:
             target_path = Path(path)
         elif path.startswith(("./", "../")):
             target_path = (current_dir / path).resolve()
+        elif resolve_repository_path(path).exists():
+            target_path = resolve_repository_path(path)
+        elif (current_dir / path).resolve().exists():
+            target_path = (current_dir / path).resolve()
+        elif (AGENT_WORKSPACE_BASE_PATH / path).resolve().exists():
+            target_path = (AGENT_WORKSPACE_BASE_PATH / path).resolve()
         else:
-            # Try as repository name first, then as relative path
-            repo_path = resolve_repository_path(path)
-            if repo_path.exists():
-                target_path = repo_path
-            else:
-                target_path = (current_dir / path).resolve()
+            target_path = (AGENT_WORKSPACE_BASE_PATH / REPOSITORIES_DIR / path).resolve()
 
         # Security check
         if not _is_within_workspace(str(target_path)):
@@ -153,7 +154,6 @@ def navigate_to_repository(repo_name: str) -> str:
 
 
 @tool("list_repositories")
-@enforce_workspace_boundary
 def list_repositories() -> str:
     """List all available repositories in the workspace."""
     try:

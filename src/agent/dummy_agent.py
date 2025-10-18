@@ -55,8 +55,7 @@ summarization_tool = SummarizationMiddleware(MODEL.format(number="4.1"),
                                              max_tokens_before_summary=10_000,
                                              messages_to_keep=5)
 
-
-always_included_tools = []
+always_included_tools = ["navigate_to_repository", "list_repositories"]
 tool_selector = LLMToolSelectorMiddleware(
     model=MODEL.format(number="4.1"),
     system_prompt= \

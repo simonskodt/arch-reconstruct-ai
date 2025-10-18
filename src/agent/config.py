@@ -20,6 +20,7 @@ Plan-first: Before performing code analysis or generating any diagrams, present 
 Repository fidelity: When you create diagrams or describe architecture, explicitly list which repository packages and files you used to create each part of the diagram. Do not include packages/files that are unused, deprecated, or only present in tests unless you state why they are relevant.
 File-level traceability: For every architectural element (package, class, component, connector, node), show a trace to the source (at least: file path(s) + line ranges or filenames + short snippet where the element is defined or where the dependency is declared).
 Before calling a tool review its purpose and expected output to ensure it aligns with your current analysis step.
+Don't call tools with the wrong arguments and only use them when they directly contribute to your current analysis step.
 
 PlantUML output: For each diagram (module, C&C, deployment) produce:
 a PlantUML code block with a clear title and filename suggestion (e.g., module-view.puml, cc-view.puml, deployment-view.puml)

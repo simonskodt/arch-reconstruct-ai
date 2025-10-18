@@ -17,7 +17,7 @@ from src.agent.tools.drawing.config import (
 from src.agent.tools.drawing.util import encode
 
 
-@tool
+@tool("create_uml")
 def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
     """Draws a UML diagram and saves it to the specified path.
 
