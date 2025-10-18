@@ -23,6 +23,12 @@ def get_navigation_tools() -> List[BaseTool]:
 
     Returns:
         List of all navigation tools including
+        - list_files_in_directory,
+        - find_files,
+        - get_current_directory,
+        - change_directory,
+        - navigate_to_repository,
+        - list_repositories,
     """
     return [
         list_files_in_directory,
