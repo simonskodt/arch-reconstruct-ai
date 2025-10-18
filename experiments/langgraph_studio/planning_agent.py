@@ -40,9 +40,7 @@ def replan(state: State) -> State:
 agent = create_agent(
     "openai:gpt-4.1-nano",
     tools=[github_clone],
-    system_prompt="Act as an customer support agent.",
-    state_schema=State,
-    # post_model_hook=update_plan,
+    system_prompt="Act as an customer support agent."
 )
 
 graph_builder = StateGraph(State)
