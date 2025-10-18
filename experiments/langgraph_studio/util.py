@@ -1,6 +1,6 @@
 """Utility functions for the LangGraph Studio experiments."""
 from datetime import datetime
-from deepagents.tools import tool
+from langchain.tools import tool
 
 def get_today_str() -> str:
     """Get current date in a human-readable format."""

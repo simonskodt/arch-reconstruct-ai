@@ -60,7 +60,7 @@ document_tool = create_retriever_tool(
 agent = create_agent(
     selected_model,
     tools=[document_tool],
-    prompt=f"""Act as an assistant.
+    system_prompt=f"""Act as an assistant.
         Call the {document_tool.name} (description: {document_tool.description})
         that you have available to answer questions on animals.""",
 )

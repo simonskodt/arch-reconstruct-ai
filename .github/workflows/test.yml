@@ -1,0 +1,32 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run unit tests
+        run: uv run --group test pytest tests/unit_tests/
+
+      - name: Run integration tests
+        env:
+          PLANTUML_INTEGRATION_TESTS: true
+        run: |
+          # Start Docker daemon (usually pre-installed on ubuntu-latest)
+          sudo systemctl start docker
+          docker pull plantuml/plantuml-server:jetty
+          uv run --group test pytest tests/integration_tests/
