@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "langchain>=1.0.0a10",
+    "langchain>=1.0.0a14",
     "langgraph>=1.0.0a4",
     "pre-commit>=4.3.0",
     "langchain-openai>=0.3.33",
@@ -28,6 +28,7 @@ dependencies = [
     "archlens>=0.2.9",
     "chromadb>=1.1.1",
     "langchain-chroma>=0.2.6",
+    "langchain-core>=1.0.0a8",
 ]
 
 [dependency-groups]
