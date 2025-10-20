@@ -58,7 +58,6 @@ class PersistentPlanningMiddleware(PlanningMiddleware):
         ) -> Command:
             """Save notes to the scratchpad."""
 
-
             # Update in-memory cache
             self.current_scratchpad = notes
 
@@ -88,7 +87,6 @@ class PersistentPlanningMiddleware(PlanningMiddleware):
         ) -> Command:
             """Read notes from the scratchpad."""
             notes = ""
-
 
             if self.store:
                 stored_data = self.store.get(self.namespace, "scratchpad")
