@@ -36,37 +36,6 @@ def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
     return _save_uml(full_content, path, False)
 
 
-
-@tool
-def update_uml(uml_content: str, file_path: str) -> str:
-    """Update an existing UML diagram with changes and save to file.
-
-    Args:
-        uml_content: The new UML diagram content
-        file_path: Path to the existing UML file
-
-    Returns:
-        The path where the updated diagram was saved
-    """
-    # Load current content for validation
-    if (err_msg := _validate_uml(uml_content)):
-        return err_msg
-    return _save_uml(uml_content, file_path, True)
-
-@tool
-def save_uml(uml_description: str, file_path: str, overwrite: bool = False) -> str:
-    """Saves a UML diagram to a file.
-
-    Args:
-        uml_description: The complete UML diagram content
-        file_path: Path where to save the diagram
-        overwrite: Whether to overwrite the file if it exists
-
-    Returns:
-        The path where the diagram was saved
-    """
-    return _save_uml(uml_description, file_path, overwrite)
-
 def _save_uml(uml_description: str, file_path: str, overwrite: bool) -> str:
     """Saves a UML diagram to a file."""
     if not overwrite and os.path.exists(file_path):
