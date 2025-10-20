@@ -1,4 +1,7 @@
-"""Navigation tools for the agent to interact with the filesystem."""
+"""
+src.agent.tools.navigation - provides tools for the agent to navigate the filesystem,
+and to interact with the filesystem.
+"""
 from typing import List
 from langchain_core.tools import BaseTool
 from . import config # Import config first to initialize constants
