@@ -2,10 +2,7 @@
 import base64
 import string
 from zlib import compress
-
 from src.agent.tools.drawing.config import PLANT_UML_SERVER_ENCODING
-
-# from https://github.com/dougn/python-plantuml/blob/master/plantuml.py
 
 maketrans = bytes.maketrans
 PLANTUML_ALPHABET = string.digits + string.ascii_uppercase + string.ascii_lowercase + '-_'

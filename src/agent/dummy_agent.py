@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.agent.tools.drawing import get_drawing_tools
 
 from src.agent.tools.planning import PersistentPlanningMiddleware
-from src.agent.tools.human_in_the_loop.config import DEFAULT_INTERRUPT_CONFIG
+from src.agent.tools.human_in_the_loop.config import DefaultInterruptConfig
 from src.agent.tools.human_in_the_loop.human_in_the_loop import(
     create_human_in_the_loop_configuration,
     apply_interrupt_config_or_default
@@ -42,7 +42,7 @@ tool_selector = LLMToolSelectorMiddleware(
     always_include=always_included_tools,
 )
 tools += navigation_tools + file_management_tools
-apply_interrupt_config_or_default(tools, DEFAULT_INTERRUPT_CONFIG)
+apply_interrupt_config_or_default(tools, DefaultInterruptConfig)
 
 tool_interrupt_configuration = create_human_in_the_loop_configuration(tools)
 

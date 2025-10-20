@@ -5,7 +5,7 @@ src.agent.tools.human_in_the_loop — Human-in-the-loop utilities:
 
 __version__ = "0.1.0"
 
-from .config import DEFAULT_INTERRUPT_CONFIG
+from .config import DefaultInterruptConfig
 from .human_in_the_loop import (
     tool_with_interrupt_config,
     create_human_in_the_loop_configuration,
@@ -13,7 +13,7 @@ from .human_in_the_loop import (
 )
 
 __all__ = [
-    "DEFAULT_INTERRUPT_CONFIG",
+    "DefaultInterruptConfig",
     "tool_with_interrupt_config",
     "create_human_in_the_loop_configuration",
     "apply_interrupt_config_or_default",
