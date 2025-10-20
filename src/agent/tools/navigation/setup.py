@@ -27,6 +27,7 @@ def setup_agent_workspace():
                 dirs_result["created"].append(result["path"])
             elif result["status"] == "exists":
                 dirs_result["existing"].append(result["path"])
+        # pylint: disable=broad-exception-caught
         except Exception as e:
             print(f"Result was: {result}")
             print(f"Error processing directory {dir_name}: {e}")

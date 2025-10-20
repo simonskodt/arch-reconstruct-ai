@@ -127,7 +127,7 @@ def change_directory(path: str) -> str:
         # Change directory
         os.chdir(target_path)
         return f"Successfully changed to: {os.getcwd()}"
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error changing directory: {e}"
 
@@ -147,7 +147,7 @@ def navigate_to_repository(repo_name: str) -> str:
 
         os.chdir(repo_path)
         return f"Successfully navigated to repository: {os.getcwd()}"
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error navigating to repository: {e}"
 
@@ -170,7 +170,7 @@ def list_repositories() -> str:
         if repos:
             return f"Available repositories: {', '.join(sorted(repos))}"
         return "No repositories found in workspace."
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error listing repositories: {e}"
 
