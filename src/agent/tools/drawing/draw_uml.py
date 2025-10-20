@@ -36,7 +36,7 @@ def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
     return _save_uml(full_content, path, False)
 
 
-def _save_uml(uml_description: str, file_path: str, overwrite: bool) -> str:
+def _save_uml(uml_description: str, file_path: str, overwrite: bool = False) -> str:
     """Saves a UML diagram to a file."""
     if not overwrite and os.path.exists(file_path):
         return f"Error: File {file_path} already exists."
@@ -132,7 +132,7 @@ def _export_uml(
         return f"Error {response.status_code}: \
         occured when trying to export the UML diagram as {format_type}, \
         try a another format {get_args(ExportFormats)}"
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         error_msg = f"Requests failed with error: {e}"
         return error_msg
