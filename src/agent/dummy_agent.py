@@ -3,24 +3,49 @@ This file defines a barebones agent.
 """
 import os
 import sys
-from langchain.agents import create_agent
 
+from langchain.agents.middleware import LLMToolSelectorMiddleware
+from langchain.agents import create_agent
+from langchain.agents.middleware import HumanInTheLoopMiddleware #, InterruptOnConfig
 
 # NECESSARY: In order to enable imports from local modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 # pylint: disable=wrong-import-position
+
+from src.agent.tools.planning import PersistentPlanningMiddleware
+from src.agent.tools.human_in_the_loop.config import DEFAULT_INTERRUPT_CONFIG
+from src.agent.tools.human_in_the_loop.human_in_the_loop import(
+    create_human_in_the_loop_configuration,
+    apply_interrupt_config_or_default
+)
+
+from src.agent.tools.navigation import get_navigation_tools, get_file_management_tools
 from src.agent.tools.github import (
     git_clone_tool,
     extract_repository_details,
     load_extracted_repository
 )
 
-
+navigation_tools = get_navigation_tools()
+file_management_tools = get_file_management_tools()
 tools = [git_clone_tool, extract_repository_details, load_extracted_repository]
 
-MODEL = "openai:gpt-4.1-nano"
+always_included_tools = [nav_tool.name for nav_tool in navigation_tools]
+tool_selector = LLMToolSelectorMiddleware(
+    model="openai:gpt-4.1-nano", # cheap model for tool selection
+    max_tools=2,
+    always_include=always_included_tools,
+)
+tools += navigation_tools + file_management_tools
+apply_interrupt_config_or_default(tools, DEFAULT_INTERRUPT_CONFIG)
+
+tool_interrupt_configuration = create_human_in_the_loop_configuration(tools)
+
+MODEL = "openai:gpt-5-nano"
 agent = create_agent(
     MODEL,
     tools=tools,
-    prompt="You are a helpful assistant.",
+    system_prompt="Your are a helpful assistant.",
+    middleware=[HumanInTheLoopMiddleware(interrupt_on=tool_interrupt_configuration),
+                PersistentPlanningMiddleware()]
 )

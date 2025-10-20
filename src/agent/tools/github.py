@@ -5,6 +5,7 @@ import os
 import shutil
 import json
 import asyncio
+from pathlib import Path
 from typing import Optional, Dict, Any
 
 from git import Repo, GitCommandError
@@ -12,6 +13,7 @@ from git.exc import NoSuchPathError, InvalidGitRepositoryError
 from langchain.tools import tool
 from gitingest.config import MAX_FILE_SIZE
 
+from src.agent.tools.navigation import resolve_repository_path
 from .config import GITINGEST_DEFAULT_OUTPUT_LOCATION
 from .gitingest_helpers import ingest_local_non_blocking, normalize_path
 
@@ -36,19 +38,22 @@ def git_clone_tool(
 
     try:
         # Ensure repositories/ root exists
-        root_dir = os.path.join(os.getcwd(), "repositories")
-        os.makedirs(root_dir, exist_ok=True)
+        repo_dir = resolve_repository_path("")  # Use navigation module to get path
 
         # Full destination path inside repositories/
-        full_dest = os.path.join(root_dir, dest)
+        repo_root = Path(repo_dir)
+        full_dest = repo_root / dest
 
         # Handle overwrite
-        if os.path.exists(full_dest):
+        if full_dest.exists():
             if overwrite:
-                shutil.rmtree(full_dest)
+                # Remove directory or file
+                if full_dest.is_dir():
+                    shutil.rmtree(full_dest)
+                else:
+                    full_dest.unlink()
             else:
                 return {"success": False, "error": f"Destination {full_dest} already exists."}
-
 
         # Clone options
         kwargs = {}
@@ -61,7 +66,7 @@ def git_clone_tool(
 
         return {
             "success": True,
-            "dest": full_dest,
+            "dest": str(full_dest),
             "branch": repo.active_branch.name if not repo.head.is_detached else "detached",
             "error": None,
         }

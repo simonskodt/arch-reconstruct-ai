@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "langchain>=1.0.0a10",
+    "langchain>=1.0.0a14",
     "langgraph>=1.0.0a4",
     "pre-commit>=4.3.0",
     "langchain-openai>=0.3.33",
@@ -26,4 +26,16 @@ dependencies = [
     "crawl4ai>=0.7.4",
     "playwright>=1.55.0",
     "archlens>=0.2.9",
+    "langchain-core>=1.0.0a8",
 ]
+
+[dependency-groups]
+test = [
+    "pytest>=8.4.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit_tests", "tests/integration_tests"]
+python_files = ["test_*.py", "*_test.py", "*_tests.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
