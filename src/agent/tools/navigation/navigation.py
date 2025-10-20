@@ -107,7 +107,7 @@ def change_directory(path: str) -> str:
             target_path = (current_dir / path).resolve()
         else:
             # Try as repository name first, then as relative path
-            repo_path = _resolve_repository_path(path)
+            repo_path = resolve_repository_path(path)
             if repo_path.exists():
                 target_path = repo_path
             else:
@@ -137,7 +137,7 @@ def change_directory(path: str) -> str:
 def navigate_to_repository(repo_name: str) -> str:
     """Navigate directly to a specific repository in the workspace."""
     try:
-        repo_path = _resolve_repository_path(repo_name)
+        repo_path = resolve_repository_path(repo_name)
 
         if not repo_path.exists():
             return f"Error: Repository '{repo_name}' not found at {repo_path}"
@@ -174,7 +174,7 @@ def list_repositories() -> str:
     except Exception as e:
         return f"Error listing repositories: {e}"
 
-def _resolve_repository_path(repo_name: str) -> Path:
+def resolve_repository_path(repo_name: str) -> Path:
     """Get the full path to a repository by name."""
     repository_root = (AGENT_WORKSPACE_BASE_PATH / REPOSITORIES_DIR).resolve()
 

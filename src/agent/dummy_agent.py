@@ -11,6 +11,7 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware #, InterruptOnC
 # NECESSARY: In order to enable imports from local modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 # pylint: disable=wrong-import-position
+
 from src.agent.tools.planning import PersistentPlanningMiddleware
 from src.agent.tools.human_in_the_loop.config import DEFAULT_INTERRUPT_CONFIG
 from src.agent.tools.human_in_the_loop.human_in_the_loop import(
@@ -19,10 +20,15 @@ from src.agent.tools.human_in_the_loop.human_in_the_loop import(
 )
 
 from src.agent.tools.navigation import get_navigation_tools, get_file_management_tools
-from src.agent.tools.github import git_clone_tool
+from src.agent.tools.github import (
+    git_clone_tool,
+    extract_repository_details,
+    load_extracted_repository
+)
 
 navigation_tools = get_navigation_tools()
 file_management_tools = get_file_management_tools()
+tools = [git_clone_tool, extract_repository_details, load_extracted_repository]
 
 always_included_tools = [nav_tool.name for nav_tool in navigation_tools]
 tool_selector = LLMToolSelectorMiddleware(
@@ -30,8 +36,7 @@ tool_selector = LLMToolSelectorMiddleware(
     max_tools=2,
     always_include=always_included_tools,
 )
-
-tools = navigation_tools + file_management_tools + [git_clone_tool]
+tools += navigation_tools + file_management_tools
 apply_interrupt_config_or_default(tools, DEFAULT_INTERRUPT_CONFIG)
 
 tool_interrupt_configuration = create_human_in_the_loop_configuration(tools)

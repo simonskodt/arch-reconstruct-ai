@@ -23,7 +23,7 @@ def test_git_clone_creates_repository_at_destination_based_on_url(repo_url,
              patch('os.makedirs') as mock_makedirs, \
              patch('os.path.exists', return_value=False), \
              patch('git.Repo.clone_from') as mock_clone, \
-             patch('src.agent.tools.github._resolve_repository_path', return_value=str(repo_dir)):
+             patch('src.agent.tools.github.resolve_repository_path', return_value=str(repo_dir)):
 
             # Mock the repo object
             mock_repo = MagicMock()
@@ -54,7 +54,7 @@ def test_git_clone_destination_exists_no_overwrite():
         existing_repo_path.mkdir(parents=True, exist_ok=True)  # Create the directory
 
         with patch('os.getcwd', return_value=temp_dir), \
-             patch('src.agent.tools.github._resolve_repository_path', return_value=str(repo_dir)):
+             patch('src.agent.tools.github.resolve_repository_path', return_value=str(repo_dir)):
 
             result = git_clone_tool.invoke({
                 "repo_url": "https://github.com/user/repo.git",
@@ -77,7 +77,7 @@ def test_git_clone_destination_exists_with_overwrite():
              patch('os.makedirs') as mock_makedirs, \
              patch('shutil.rmtree') as mock_rmtree, \
              patch('git.Repo.clone_from') as mock_clone, \
-             patch('src.agent.tools.github._resolve_repository_path', return_value=str(repo_dir)):
+             patch('src.agent.tools.github.resolve_repository_path', return_value=str(repo_dir)):
 
             # Mock the repo object
             mock_repo = MagicMock()

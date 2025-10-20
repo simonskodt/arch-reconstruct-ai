@@ -12,7 +12,7 @@ from .navigation import (
     change_directory,
     navigate_to_repository,
     list_repositories,
-    _resolve_repository_path,
+    resolve_repository_path,
 )
 
 from .file_management import (
@@ -58,6 +58,6 @@ __all__ = [
     "change_directory",
     "navigate_to_repository",
     "list_repositories",
-    "_resolve_repository_path",
+    "resolve_repository_path",
     "read_file",
 ]
