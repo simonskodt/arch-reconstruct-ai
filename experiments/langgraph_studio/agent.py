@@ -19,5 +19,5 @@ def send_email(to: str, subject: str, body: str):
 agent = create_agent(
     "openai:gpt-4.1-nano",
     tools=[send_email],
-    prompt="Act as an email assistant. Use the send_email tool to send emails.",
+    system_prompt="Act as an email assistant. Use the send_email tool to send emails.",
 )
