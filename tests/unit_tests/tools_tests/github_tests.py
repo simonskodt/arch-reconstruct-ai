@@ -3,7 +3,6 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 import pytest
-
 from src.agent.tools.github import git_clone_tool
 
 @pytest.mark.parametrize(
@@ -19,10 +18,12 @@ def test_git_clone_creates_repository_at_destination_based_on_url(repo_url,
                                                                   branch):
     """Test successful git clone operation."""
     with tempfile.TemporaryDirectory() as temp_dir:
+        repo_dir = Path(temp_dir) / "repositories"
         with patch('os.getcwd', return_value=temp_dir), \
              patch('os.makedirs') as mock_makedirs, \
              patch('os.path.exists', return_value=False), \
-             patch('git.Repo.clone_from') as mock_clone:
+             patch('git.Repo.clone_from') as mock_clone, \
+             patch('src.agent.tools.github.resolve_repository_path', return_value=str(repo_dir)):
 
             # Mock the repo object
             mock_repo = MagicMock()
@@ -41,15 +42,19 @@ def test_git_clone_creates_repository_at_destination_based_on_url(repo_url,
             assert result["error"] is None
             mock_clone.assert_called_once()
 
-            destination = str(Path(f"{temp_dir}/repositories/{dest}").resolve())
+            destination = repo_dir / dest
             mock_makedirs.assert_called_with(destination, exist_ok=True)
 
 
 def test_git_clone_destination_exists_no_overwrite():
     """Test git clone when destination exists and overwrite is False."""
     with tempfile.TemporaryDirectory() as temp_dir:
+        repo_dir = Path(temp_dir) / "repositories"
+        existing_repo_path = repo_dir / "existing_repo"
+        existing_repo_path.mkdir(parents=True, exist_ok=True)  # Create the directory
+
         with patch('os.getcwd', return_value=temp_dir), \
-             patch('os.path.exists', return_value=True):
+             patch('src.agent.tools.github.resolve_repository_path', return_value=str(repo_dir)):
 
             result = git_clone_tool.invoke({
                 "repo_url": "https://github.com/user/repo.git",
@@ -64,11 +69,15 @@ def test_git_clone_destination_exists_no_overwrite():
 def test_git_clone_destination_exists_with_overwrite():
     """Test git clone when destination exists and overwrite is True."""
     with tempfile.TemporaryDirectory() as temp_dir:
+        repo_dir = Path(temp_dir) / "repositories"
+        existing_repo_path = repo_dir / "existing_repo"
+        existing_repo_path.mkdir(parents=True, exist_ok=True)  # Create the directory
+
         with patch('os.getcwd', return_value=temp_dir), \
              patch('os.makedirs') as mock_makedirs, \
-             patch('os.path.exists', return_value=True), \
              patch('shutil.rmtree') as mock_rmtree, \
-             patch('git.Repo.clone_from') as mock_clone:
+             patch('git.Repo.clone_from') as mock_clone, \
+             patch('src.agent.tools.github.resolve_repository_path', return_value=str(repo_dir)):
 
             # Mock the repo object
             mock_repo = MagicMock()
@@ -83,7 +92,7 @@ def test_git_clone_destination_exists_with_overwrite():
             })
 
             assert result["success"] is True
-            mock_rmtree.assert_called_once()
+            mock_rmtree.assert_called_once_with(existing_repo_path)
             mock_clone.assert_called_once()
-            destination = str(Path(f"{temp_dir}/repositories/existing_repo").resolve())
+            destination = repo_dir / "existing_repo"
             mock_makedirs.assert_called_with(destination, exist_ok=True)
