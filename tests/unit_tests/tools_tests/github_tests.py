@@ -1,18 +1,9 @@
 """Unit tests for GitHub-related functions."""
-import os
 import tempfile
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 import pytest
-
 from src.agent.tools.github import git_clone_tool
-
-
-@pytest.fixture(autouse=True)
-def mock_workspace_env():
-    """Fixture that mocks the required AGENT_WORKSPACE_BASE_PATH environment variable."""
-    with patch.dict(os.environ, {"AGENT_WORKSPACE_BASE_PATH": "/tmp/test_workspace"}):
-        yield
 
 @pytest.mark.parametrize(
     "repo_url, dest, expected_dest_suffix, branch",
