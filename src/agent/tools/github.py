@@ -60,9 +60,9 @@ def git_clone_tool(
 
         return {
             "success": True,
-            "dest": full_dest,
+            "dest": str(full_dest),
             "branch": repo.active_branch.name if not repo.head.is_detached else "detached",
             "error": None,
         }
     except (GitCommandError, NoSuchPathError, InvalidGitRepositoryError) as e:
-        return {"success": False, "dest": dest, "error": str(e)}
+        return {"success": False, "dest": str(dest), "error": str(e)}
