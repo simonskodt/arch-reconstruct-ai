@@ -1,7 +1,7 @@
 """Planning middleware with task management, and persistent scratchpad functionality."""
 from typing import Awaitable, Callable, Optional, Annotated, NotRequired
-from langchain.agents.middleware import PlanningMiddleware
-from langchain.agents.middleware.planning import PlanningState
+from langchain.agents.middleware import TodoListMiddleware
+from langchain.agents.middleware.todo import PlanningState
 from langchain.agents.middleware.types import (
     ModelCallResult,
     ModelRequest,
@@ -22,7 +22,7 @@ class PersistentPlanningState(PlanningState):
     scratchpad: NotRequired[str]
 
 
-class PersistentPlanningMiddleware(PlanningMiddleware):
+class PersistentPlanningMiddleware(TodoListMiddleware):
     """Extended planning middleware with persistent scratchpad functionality.
 
     This middleware combines task management capabilities with persistent scratchpad
