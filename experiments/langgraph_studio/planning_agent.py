@@ -41,7 +41,6 @@ agent = create_agent(
     "openai:gpt-4.1-nano",
     tools=[github_clone],
     system_prompt="Act as an customer support agent."
-    # post_model_hook=update_plan, # should be implemented in middleware
 )
 
 graph_builder = StateGraph(State)

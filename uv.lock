@@ -225,6 +225,11 @@ dependencies = [
     { name = "rich" },
 ]
 
+[package.dev-dependencies]
+test = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "archlens", specifier = ">=0.2.9" },
@@ -250,6 +255,9 @@ requires-dist = [
     { name = "pypdf", specifier = ">=6.1.1" },
     { name = "rich", specifier = ">=14.1.0" },
 ]
+
+[package.metadata.requires-dev]
+test = [{ name = "pytest", specifier = ">=8.4.2" }]
 
 [[package]]
 name = "archlens"
@@ -1117,6 +1125,15 @@ wheels = [
 ]
 
 [[package]]
+name = "iniconfig"
+version = "2.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f2/97/ebf4da567aa6827c909642694d71c9fcf53e5b504f2d96afea02718862f3/iniconfig-2.1.0.tar.gz", hash = "sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7", size = 4793, upload-time = "2025-03-19T20:09:59.721Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl", hash = "sha256:9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760", size = 6050, upload-time = "2025-03-19T20:10:01.071Z" },
+]
+
+[[package]]
 name = "ipykernel"
 version = "6.30.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1360,16 +1377,16 @@ wheels = [
 
 [[package]]
 name = "langchain-anthropic"
-version = "0.3.21"
+version = "1.0.0a4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anthropic" },
     { name = "langchain-core" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a0/26/5e02dee815a5b03b332ee2ba3a244a8266795d6bfa7a683845ae1689c991/langchain_anthropic-0.3.21.tar.gz", hash = "sha256:c6372fbc933171b2707d856215bb88e48bc480fbc8a23b3ff9652acd5646ad3e", size = 470812, upload-time = "2025-09-29T20:05:02.006Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/fe/5e7b82d2a9fa9ffba206bc14d91d7eef797288f510246b85e999ec9bdb50/langchain_anthropic-1.0.0a4.tar.gz", hash = "sha256:43e8e36ae028f9baaf69541b18ffa0235ef559be54858b7a749e4421b6340f90", size = 650447, upload-time = "2025-10-10T20:46:21.252Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/21/de/3b553f9a173dc6b57ec66f727ffed5131119b0ac23654e8c304decb8ded1/langchain_anthropic-0.3.21-py3-none-any.whl", hash = "sha256:459102b1bf223595d6ace70b771816c18f0adc29131151c789c1ea08f67d65e1", size = 32521, upload-time = "2025-09-29T20:05:00.545Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/ad/6a540a0ac2eb0a0920f3b6d3509a215a03222891c5525d79f09fde3b3713/langchain_anthropic-1.0.0a4-py3-none-any.whl", hash = "sha256:65d81ab64d8e9bb1f18f95418cb71bd232502d39b38e529b003736a7651e1180", size = 33684, upload-time = "2025-10-10T20:46:19.608Z" },
 ]
 
 [[package]]
@@ -1442,16 +1459,16 @@ wheels = [
 
 [[package]]
 name = "langchain-openai"
-version = "0.3.34"
+version = "1.0.0a4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
     { name = "openai" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/75/23/91461c6c2b1c8ceeadd6fefe453a03b1537afeff4ace3c118d7e7659f5a7/langchain_openai-0.3.34.tar.gz", hash = "sha256:57916d462be5b8fd19e5cb2f00d4e5cf0465266a292d583de2fc693a55ba190e", size = 785924, upload-time = "2025-10-01T15:18:40.635Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/d4/410fc0d9e39e48f7062094bb3f8f444dd36de659531c701dbde4ea7762b2/langchain_openai-1.0.0a4.tar.gz", hash = "sha256:d440039dd86ce50d475d31251992569cdefc033cf9dc2deb589c1999da3abd7a", size = 952920, upload-time = "2025-10-07T13:42:34.38Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/94/132aff5a1ed4ebfe7b4d3e4dbf30b9f70ce2bd2ac3470d0c0e742845afb1/langchain_openai-0.3.34-py3-none-any.whl", hash = "sha256:08d61d68a6d869c70d542171e149b9065668dedfc4fafcd4de8aeb5b933030a9", size = 75605, upload-time = "2025-10-01T15:18:39.415Z" },
+    { url = "https://files.pythonhosted.org/packages/a4/bf/d2bae0b2dbb00ea3d693320a36ac6748704aa362ca98d4400506ff95df14/langchain_openai-1.0.0a4-py3-none-any.whl", hash = "sha256:797d93cbe5e039bc1d47eaaa235b442f48d88ca0230a49e5460b5181c3c9d2cb", size = 77692, upload-time = "2025-10-07T13:42:33.345Z" },
 ]
 
 [[package]]
@@ -2325,6 +2342,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pluggy"
+version = "1.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f9/e2/3e91f31a7d2b083fe6ef3fa267035b518369d9511ffab804f839851d2779/pluggy-1.6.0.tar.gz", hash = "sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3", size = 69412, upload-time = "2025-05-15T12:30:07.975Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/54/20/4d324d65cc6d9205fabedc306948156824eb9f0ee1633355a8f7ec5c66bf/pluggy-1.6.0-py3-none-any.whl", hash = "sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746", size = 20538, upload-time = "2025-05-15T12:30:06.134Z" },
+]
+
+[[package]]
 name = "pre-commit"
 version = "4.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2628,6 +2654,22 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a6/85/4c0f12616db83c2e3ef580c3cfa98bd082e88fc8d02e136bad3bede1e3fa/pypdf-6.1.1.tar.gz", hash = "sha256:10f44d49bf2a82e54c3c5ba3cdcbb118f2a44fc57df8ce51d6fb9b1ed9bfbe8b", size = 5074507, upload-time = "2025-09-28T13:29:16.165Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/07/ed/adae13756d9dabdddee483fc7712905bb5585fbf6e922b1a19aca3a29cd1/pypdf-6.1.1-py3-none-any.whl", hash = "sha256:7781f99493208a37a7d4275601d883e19af24e62a525c25844d22157c2e4cde7", size = 323455, upload-time = "2025-09-28T13:29:14.392Z" },
+]
+
+[[package]]
+name = "pytest"
+version = "8.4.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "iniconfig" },
+    { name = "packaging" },
+    { name = "pluggy" },
+    { name = "pygments" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a3/5c/00a0e072241553e1a7496d638deababa67c5058571567b92a7eaa258397c/pytest-8.4.2.tar.gz", hash = "sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01", size = 1519618, upload-time = "2025-09-04T14:34:22.711Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a8/a4/20da314d277121d6534b3a980b29035dcd51e6744bd79075a6ce8fa4eb8d/pytest-8.4.2-py3-none-any.whl", hash = "sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79", size = 365750, upload-time = "2025-09-04T14:34:20.226Z" },
 ]
 
 [[package]]
