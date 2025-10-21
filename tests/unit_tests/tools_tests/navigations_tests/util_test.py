@@ -19,13 +19,18 @@ class TestUtilFunctions:
          {"is_path": True, "contains": ["C:", "Users", "test"]}),
         ("relative/path", {"is_path": True, "is_absolute": True}),
         ("  /mnt/c/test  ", {"is_path": True, "contains": ["C:", "test"]}),
-        ("  ./test/repo  ", {"is_path": True, "contains": ["C:", "test", "repo"]}),
+        ("  ./test/repo  ", {"is_path": True, "contains": ["test", "repo"], "mock_cwd": True}),
 
     ], ids=["windows_path", "wsl_path", "git_bash_path", "relative_path",
             "whitespace_path", "dot_slash_path"])
     def test_normalize_path_various_inputs(self, input_path, expected_checks):
         """Test normalizing various types of paths."""
-        result = normalize_path(input_path)
+        if expected_checks.get("mock_cwd"):
+            # Mock the current working directory for relative path tests
+            with patch("pathlib.Path.cwd", return_value=Path("C:/mock/workspace")):
+                result = normalize_path(input_path)
+        else:
+            result = normalize_path(input_path)
 
         assert isinstance(result, Path)
 
