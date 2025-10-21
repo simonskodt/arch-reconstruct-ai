@@ -27,7 +27,7 @@ class TestUtilFunctions:
         """Test normalizing various types of paths."""
         if expected_checks.get("mock_cwd"):
             # Mock the current working directory for relative path tests
-            with patch("pathlib.Path.cwd", return_value=Path("C:/mock/workspace")):
+            with patch("os.getcwd", return_value="C:\\mock\\workspace"):
                 result = normalize_path(input_path)
         else:
             result = normalize_path(input_path)
