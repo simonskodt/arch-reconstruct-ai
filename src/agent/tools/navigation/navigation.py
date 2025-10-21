@@ -103,10 +103,7 @@ def change_directory(path: str) -> str:
         # Resolve the target path
         if Path(path).is_absolute():
             target_path = Path(path)
-        elif path.startswith(("./", "../")):
-            target_path = (current_dir / path).resolve()
         else:
-            # Try as repository name first, then as relative path
             repo_path = resolve_repository_path(path)
             if repo_path.exists():
                 target_path = repo_path
