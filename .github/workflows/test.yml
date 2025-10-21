@@ -21,3 +21,12 @@ jobs:
 
       - name: Run unit tests
         run: uv run --group test pytest tests/unit_tests/
+
+      - name: Run integration tests
+        env:
+          PLANTUML_INTEGRATION_TESTS: true
+        run: |
+          # Start Docker daemon (usually pre-installed on ubuntu-latest)
+          sudo systemctl start docker
+          docker pull plantuml/plantuml-server:jetty
+          uv run --group test pytest tests/integration_tests/

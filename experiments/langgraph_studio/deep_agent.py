@@ -1,21 +1,21 @@
 """A deep agent that uses tools to perform software architecture reconstruction."""
-from deepagents import create_deep_agent, SubAgent
+from deepagents import create_deep_agent #, SubAgent
 from experiments.langgraph_studio.util import get_today_str, think_tool
 from experiments.langgraph_studio.prompts import (
-    SUBAGENT_USAGE_INSTRUCTIONS,
-    RESEARCHER_INSTRUCTIONS
+    SUBAGENT_USAGE_INSTRUCTIONS
+    # RESEARCHER_INSTRUCTIONS
 )
 
 
 sub_agent_tools = [think_tool]
-research_sub_agent = SubAgent({
-    "name": "research-agent",
-    "description": "Delegate research to the sub-agent researcher. "
-    "Only give this researcher one topic at a time.",
-    "prompt": RESEARCHER_INSTRUCTIONS.format(date=get_today_str()),
-    "tools": sub_agent_tools,
-    "model": {"model": "gpt-5-nano", "model_provider": "openai"},
-})
+# research_sub_agent = SubAgent(
+#     "name": "research-agent",
+#     "description": "Delegate research to the sub-agent researcher. "
+#     "Only give this researcher one topic at a time.",
+#     "prompt": RESEARCHER_INSTRUCTIONS.format(date=get_today_str()),
+#     "tools": sub_agent_tools,
+#     "model": {"model": "gpt-5-nano", "model_provider": "openai"},
+# )
 
 MAX_CONCURRENT_RESEARCH_UNITS = 3
 MAX_RESEARCHER_ITERATIONS = 3
@@ -31,6 +31,6 @@ deep_agent = create_deep_agent(
     tools=tools,
     # instructions=SUBAGENT_INSTRUCTIONS,
     model="openai:gpt-5-nano",
-    subagents=[research_sub_agent],
+    subagents=[],
 )
 graph = deep_agent

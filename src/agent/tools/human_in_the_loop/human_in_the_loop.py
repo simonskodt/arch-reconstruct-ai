@@ -45,7 +45,7 @@ from langchain.agents.middleware.human_in_the_loop import InterruptOnConfig
 from langchain_core.tools import BaseTool
 
 from .config import (
-    DEFAULT_INTERRUPT_CONFIG, DEFAULT_INTERRUPT_DESCRIPTION
+    DefaultInterruptConfig, DEFAULT_INTERRUPT_DESCRIPTION
 )
 
 
@@ -125,7 +125,7 @@ def apply_interrupt_config_or_default(
     ):
     """Apply a interrupt configuration or default to a list of tools."""
     if config is None:
-        config = DEFAULT_INTERRUPT_CONFIG
+        config = DefaultInterruptConfig
     elif isinstance(config, bool) and config:
         config = InterruptOnConfig(
             allowed_decisions=["approve", "edit", "reject"],

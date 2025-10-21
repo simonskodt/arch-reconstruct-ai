@@ -22,4 +22,5 @@ def get_ollama_embeddings(**kwargs):
             "Ollama embeddings support requires the 'langchain_ollama' package. "
             "Install it and ensure Ollama is configured."
         )
+    assert OllamaEmbeddings is not None
     return OllamaEmbeddings(**kwargs)
