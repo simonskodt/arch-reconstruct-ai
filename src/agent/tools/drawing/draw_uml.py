@@ -37,56 +37,38 @@ def create_uml_diagram(name: str, diagram_content: str, repo_name: str) -> str:
     return _save_uml(full_content, name, repo_name, False)
 
 
-
-@tool
-def update_uml(uml_content: str, name: str, repo_name: str) -> str:
-    """Update an existing UML diagram with changes and save to file.
-
-    Args:
-        uml_content: The new UML diagram content
-        name: The name of the UML diagram
-        file_path: Path to the existing UML file
-
-    Returns:
-        The path where the updated diagram was saved
-    """
-    # Load current content for validation
-    if (err_msg := _validate_uml(uml_content)):
-        return err_msg
-    return _save_uml(uml_content, name, repo_name, True)
-
-@tool
-def save_uml(uml_description: str, name: str, repo_name: str, overwrite: bool = False) -> str:
-    """Saves a UML diagram to a file.
-
-    Args:
-        uml_description: The complete UML diagram content
-        name: The name of the UML diagram
-        repo_name: Name of the repository where the diagram should be saved
-        overwrite: Whether to overwrite the file if it exists
-
-    Returns:
-        The path where the diagram was saved
-    """
-
-    return _save_uml(uml_description, name, repo_name, overwrite)
-
-def _save_uml(uml_description: str, name:str, repo_name: str, overwrite: bool) -> str:
+def _save_uml(uml_description: str,
+              name_or_path: str,
+              repo_name_or_overwrite=None,
+              overwrite: bool = False) -> str:
     """Saves a UML diagram to a file."""
-    validated_repo_name = repo_name.strip().lower()
-    repo_input = list_repositories.invoke({}).strip().lower()
-    if validated_repo_name not in repo_input.split(", "):
-        return f"Error: Repository '{repo_name}' not found. {repo_input}"
+    # Handle different calling conventions
+    if repo_name_or_overwrite is None or isinstance(repo_name_or_overwrite, bool):
+        # Called as _save_uml(uml_content, save_path, overwrite)
+        file_path = name_or_path
+        overwrite_flag = repo_name_or_overwrite if repo_name_or_overwrite is not None else overwrite
+    else:
+        # Called as _save_uml(uml_description, name, repo_name, overwrite)
+        name = name_or_path
+        repo_name = repo_name_or_overwrite
+        overwrite_flag = overwrite
 
-    if not name.endswith(".puml"):
-        name = name.rsplit(".", 1)[0] + ".puml"
-    full_repo_path = (resolve_repository_path(validated_repo_name) / name).resolve()
-    file_path = os.path.join(full_repo_path, name)
-    if not overwrite and os.path.exists(file_path):
+        validated_repo_name = repo_name.strip().lower()
+        repo_input = list_repositories.invoke({}).strip().lower()
+        if validated_repo_name not in repo_input.split(", "):
+            return f"Error: Repository '{repo_name}' not found. {repo_input}"
+
+        if not name.endswith(".puml"):
+            name = name.rsplit(".", 1)[0] + ".puml"
+        repo_path = resolve_repository_path(validated_repo_name)
+        file_path = os.path.join(str(repo_path), name)
+
+    if not overwrite_flag and os.path.exists(file_path):
         return f"Error: File {file_path} already exists."
     try:
         with open(file_path, "w", encoding=ENCODING) as file:
             file.write(uml_description)
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error saving UML file: {e}"
 
@@ -109,6 +91,7 @@ def _load_uml(file_path: str) -> str:
     try:
         with open(file_path, "r", encoding=ENCODING) as file:
             return file.read()
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error loading UML file: {e}"
 
@@ -181,7 +164,7 @@ def _export_uml(
         return f"Error {response.status_code}: \
         occured when trying to export the UML diagram as {format_type}, \
         try a another format {get_args(ExportFormats)}"
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         error_msg = f"Requests failed with error: {e}"
         return error_msg

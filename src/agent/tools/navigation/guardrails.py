@@ -26,7 +26,7 @@ def enforce_workspace_boundary(func: Callable) -> Callable:
             if (error_msg := _reset_to_workspace_root_if_outside()):
                 return error_msg
             return result
-
+        # pylint: disable=broad-exception-caught
         except Exception as e:
             # On any error, ensure we're in a safe location
             try:

@@ -26,8 +26,6 @@ dependencies = [
     "crawl4ai>=0.7.4",
     "playwright>=1.55.0",
     "archlens>=0.2.9",
-    "chromadb>=1.1.1",
-    "langchain-chroma>=0.2.6",
     "langchain-core>=1.0.0a8",
 ]
 

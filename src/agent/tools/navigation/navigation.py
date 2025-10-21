@@ -105,14 +105,13 @@ def change_directory(path: str) -> str:
             target_path = Path(path)
         elif path.startswith(("./", "../")):
             target_path = (current_dir / path).resolve()
-        elif resolve_repository_path(path).exists():
-            target_path = resolve_repository_path(path)
-        elif (current_dir / path).resolve().exists():
-            target_path = (current_dir / path).resolve()
-        elif (AGENT_WORKSPACE_BASE_PATH / path).resolve().exists():
-            target_path = (AGENT_WORKSPACE_BASE_PATH / path).resolve()
         else:
-            target_path = (AGENT_WORKSPACE_BASE_PATH / REPOSITORIES_DIR / path).resolve()
+            # Try as repository name first, then as relative path
+            repo_path = resolve_repository_path(path)
+            if repo_path.exists():
+                target_path = repo_path
+            else:
+                target_path = (current_dir / path).resolve()
 
         # Security check
         if not _is_within_workspace(str(target_path)):
@@ -128,7 +127,7 @@ def change_directory(path: str) -> str:
         # Change directory
         os.chdir(target_path)
         return f"Successfully changed to: {os.getcwd()}"
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error changing directory: {e}"
 
@@ -148,12 +147,13 @@ def navigate_to_repository(repo_name: str) -> str:
 
         os.chdir(repo_path)
         return f"Successfully navigated to repository: {os.getcwd()}"
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error navigating to repository: {e}"
 
 
 @tool("list_repositories")
+@enforce_workspace_boundary
 def list_repositories() -> str:
     """List all available repositories in the workspace."""
     try:
@@ -170,7 +170,7 @@ def list_repositories() -> str:
         if repos:
             return f"Available repositories: {', '.join(sorted(repos))}"
         return "No repositories found in workspace."
-
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return f"Error listing repositories: {e}"
 

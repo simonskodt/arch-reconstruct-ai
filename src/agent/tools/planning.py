@@ -1,6 +1,6 @@
 """Planning middleware with task management, and persistent scratchpad functionality."""
 from typing import Awaitable, Callable, Optional, Annotated, NotRequired
-from langchain.agents.middleware.todo import TodoListMiddleware
+from langchain.agents.middleware import TodoListMiddleware
 from langchain.agents.middleware.todo import PlanningState
 from langchain.agents.middleware.types import (
     ModelCallResult,
@@ -58,7 +58,6 @@ class PersistentPlanningMiddleware(TodoListMiddleware):
         ) -> Command:
             """Save notes to the scratchpad."""
 
-
             # Update in-memory cache
             self.current_scratchpad = notes
 
@@ -88,7 +87,6 @@ class PersistentPlanningMiddleware(TodoListMiddleware):
         ) -> Command:
             """Read notes from the scratchpad."""
             notes = ""
-
 
             if self.store:
                 stored_data = self.store.get(self.namespace, "scratchpad")

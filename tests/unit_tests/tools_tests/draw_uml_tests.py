@@ -4,9 +4,8 @@ import tempfile
 import pytest
 from src.agent.tools.drawing.draw_uml import (
     load_uml,
-    save_uml,
+    _save_uml,
     _validate_uml,
-
 )
 
 from tests.uml_examples import UML_DIAGRAMS
@@ -18,7 +17,7 @@ def test_save_uml(uml_content, diagram_type):
     with tempfile.TemporaryDirectory() as temp_dir:
         save_path = os.path.join(temp_dir, f"test_{diagram_type}.puml")
 
-        result = save_uml.invoke({"uml_description": uml_content, "file_path": save_path})
+        result = _save_uml(uml_content, save_path)
         assert result == save_path
         assert os.path.exists(save_path)
 
@@ -36,9 +35,7 @@ def test_save_uml_no_overwrite():
             f.write("initial content")
 
         # Try to save without overwrite
-        result = save_uml.invoke({"uml_description": "new content",
-                                  "file_path": file_path,
-                                  "overwrite": False})
+        result = _save_uml("new content", file_path, False)
         assert "already exists" in result
         assert os.path.exists(file_path)
 

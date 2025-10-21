@@ -67,7 +67,7 @@ def git_clone_tool(
 
         return {
             "success": True,
-            "dest": full_dest,
+            "dest": str(full_dest),
             "branch": repo.active_branch.name if not repo.head.is_detached else "detached",
             "error": None,
         }
@@ -148,6 +148,7 @@ async def extract_repository_details(
 
     except PermissionError as e:
         return {"success": False, "error": f"Permission denied: {e}"}
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return {"success": False, "error": str(e)}
 
@@ -209,5 +210,6 @@ def load_extracted_repository(
 
     except json.JSONDecodeError:
         return {"success": False, "error": "Invalid JSON format in file"}
+    # pylint: disable=broad-exception-caught
     except Exception as e:
         return {"success": False, "error": f"Error loading file: {str(e)}"}

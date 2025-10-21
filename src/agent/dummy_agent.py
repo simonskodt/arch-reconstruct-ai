@@ -6,8 +6,9 @@ import sys
 import asyncio
 
 from langchain.agents import create_agent
-from langchain.agents.middleware.summarization import SummarizationMiddleware
-from langchain.agents.middleware import LLMToolSelectorMiddleware
+from langchain.agents.middleware import (SummarizationMiddleware,
+                                         LLMToolSelectorMiddleware,
+                                         HumanInTheLoopMiddleware)
 from langchain_community.tools import BraveSearch
 
 
@@ -20,6 +21,12 @@ from src.agent.tools.planning import PersistentPlanningMiddleware
 from src.utils.services import check_service_availability
 from src.mcp.mcp_client_factory import create_mcp_client_from_config
 from src.utils.validate_tools import ToolSchemaFixer
+
+from src.agent.tools.human_in_the_loop.config import DefaultInterruptConfig
+from src.agent.tools.human_in_the_loop.human_in_the_loop import(
+    create_human_in_the_loop_configuration,
+    apply_interrupt_config_or_default
+)
 
 # tools
 from src.agent.tools.drawing import get_drawing_tools
@@ -49,13 +56,15 @@ tools = get_drawing_tools() + \
     [git_clone_tool, extract_repository_details, load_extracted_repository, brave_search]
 
 
+
 # Agent Middleware
+# pylint: disable=invalid-name
 MODEL = "openai:gpt-{number}-nano"
 summarization_tool = SummarizationMiddleware(MODEL.format(number="4.1"),
                                              max_tokens_before_summary=10_000,
                                              messages_to_keep=5)
 
-always_included_tools = ["navigate_to_repository", "list_repositories"]
+always_included_tools = []
 tool_selector = LLMToolSelectorMiddleware(
     model=MODEL.format(number="4.1"),
     system_prompt= \
@@ -68,9 +77,17 @@ tool_selector = LLMToolSelectorMiddleware(
     always_include=always_included_tools,
 )
 
+
+apply_interrupt_config_or_default(tools, DefaultInterruptConfig)
+tool_interrupt_configuration = create_human_in_the_loop_configuration(tools)
+
+MODEL = "openai:gpt-5-nano"
 agent = create_agent(
     MODEL.format(number="5"),
     tools=tools,
     system_prompt=ARCHITECTURAL_RECONSTRUCTION_PROMPT,
-    middleware=[PersistentPlanningMiddleware(), summarization_tool, tool_selector],
+    middleware=[HumanInTheLoopMiddleware(interrupt_on=tool_interrupt_configuration),
+                PersistentPlanningMiddleware(),
+                summarization_tool,
+                tool_selector]
 )

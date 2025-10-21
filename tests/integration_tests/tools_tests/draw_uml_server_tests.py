@@ -11,7 +11,6 @@ from src.agent.tools.drawing.config import ExportFormats, SUCCESS_STATUS_CODE, P
 from src.agent.tools.drawing.draw_uml import (
     create_uml_diagram,
     export_uml,
-    update_uml,
     _validate_uml,
     _export_uml
 )
@@ -32,6 +31,7 @@ def ensure_plantuml_server():
         try:
             response = requests.get(f"{server_url}/", timeout=5)
             return response.status_code == 200
+        # pylint: disable=broad-exception-caught
         except Exception as _:
             return False
 
@@ -150,39 +150,3 @@ def test_validate_uml_invalid_content():
     result = _validate_uml(invalid_uml)
     assert isinstance(result, str)
     assert "Error" in result
-
-def test_update_uml_valid():
-    """Test updating UML with valid content."""
-    with tempfile.TemporaryDirectory() as temp_dir:
-        initial_content = "@startuml\nAlice -> Bob\n@enduml"
-        updated_content = "@startuml\nAlice -> Bob: Hello\n@enduml"
-        file_path = os.path.join(temp_dir, "test_update.puml")
-
-        # Create initial file
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(initial_content)
-
-        result = update_uml.invoke({"uml_content": updated_content, "file_path": file_path})
-        assert result == file_path
-
-        # Check updated content
-        with open(file_path, 'r', encoding='utf-8') as f:
-            assert f.read() == updated_content
-
-def test_update_uml_invalid():
-    """Test updating UML with invalid content reverts to previous."""
-    with tempfile.TemporaryDirectory() as temp_dir:
-        initial_content = "@startuml\nAlice -> Bob\n@enduml"
-        invalid_content = "@startuml\nAlice Bob Hello\n@enduml"
-        file_path = os.path.join(temp_dir, "test_update_invalid.puml")
-
-        # Create initial file
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(initial_content)
-
-        result = update_uml.invoke({"uml_content": invalid_content, "file_path": file_path})
-        assert "Error" in result
-
-        # Check content reverted
-        with open(file_path, 'r', encoding='utf-8') as f:
-            assert f.read() == initial_content

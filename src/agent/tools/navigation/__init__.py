@@ -1,4 +1,7 @@
-"""Navigation tools for the agent to interact with the filesystem."""
+"""
+src.agent.tools.navigation - provides tools for the agent to navigate the filesystem,
+and to interact with the filesystem.
+"""
 from typing import List
 from langchain_core.tools import BaseTool
 from . import config # Import config first to initialize constants
@@ -23,12 +26,6 @@ def get_navigation_tools() -> List[BaseTool]:
 
     Returns:
         List of all navigation tools including
-        - list_files_in_directory,
-        - find_files,
-        - get_current_directory,
-        - change_directory,
-        - navigate_to_repository,
-        - list_repositories,
     """
     return [
         list_files_in_directory,
