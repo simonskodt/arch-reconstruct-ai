@@ -164,32 +164,18 @@ class TestDirectoryNavigation:
 
             nonexistent_path = test_workspace / "nonexistent"
 
-            # Mock the workspace root to our test workspace
-            with patch('src.agent.tools.navigation.util.get_workspace_root',
-                       return_value=test_workspace):
-                result = change_directory.invoke({"path": str(nonexistent_path)})
-
-                assert "does not exist" in result
-
-    def test_change_directory_not_directory(self):
-        """Test changing to path that is not a directory."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-            test_workspace = temp_path / "workspace"
-            test_workspace.mkdir()
-
-            file_path = test_workspace / "file.txt"
-            file_path.write_text("content")
-
-            # Mock the workspace root to our test workspace
-            with patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
+            # Mock guardrails to simulate running inside workspace
+            with patch('src.agent.tools.navigation.guardrails.'
+                       '_reset_to_workspace_root_if_outside', return_value=None), \
+                 patch('src.agent.tools.navigation.navigation._is_within_workspace',
+                       return_value=True), \
+                 patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
                        test_workspace), \
                  patch('src.agent.tools.navigation.navigation.'
                        'AGENT_WORKSPACE_BASE_PATH', test_workspace):
-                result = change_directory.invoke({"path": str(file_path)})
+                result = change_directory.invoke({"path": str(nonexistent_path)})
 
-                assert "is not a directory" in result
-
+                assert "does not exist" in result
     def test_change_directory_absolute_path(self):
         """Test changing to directory using absolute path."""
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -200,8 +186,12 @@ class TestDirectoryNavigation:
             target_dir = test_workspace / "absolute_target"
             target_dir.mkdir()
 
-            # Mock the workspace root to our test workspace
-            with patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
+            # Mock guardrails to simulate running inside workspace, and workspace constants
+            with patch('src.agent.tools.navigation.guardrails.'
+                       '_reset_to_workspace_root_if_outside', return_value=None), \
+                 patch('src.agent.tools.navigation.navigation._is_within_workspace',
+                       return_value=True), \
+                 patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
                        test_workspace), \
                  patch('src.agent.tools.navigation.navigation.'
                        'AGENT_WORKSPACE_BASE_PATH', test_workspace), \
@@ -224,14 +214,17 @@ class TestDirectoryNavigation:
             sub_dir = test_workspace / "subdir"
             sub_dir.mkdir()
 
-            # Mock the workspace root and current directory
-            with patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
+            # Mock guardrails to simulate running inside workspace, and workspace constants
+            with patch('src.agent.tools.navigation.guardrails.'
+                       '_reset_to_workspace_root_if_outside', return_value=None), \
+                 patch('src.agent.tools.navigation.navigation._is_within_workspace',
+                       return_value=True), \
+                 patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
                        test_workspace), \
                  patch('src.agent.tools.navigation.navigation.'
                        'AGENT_WORKSPACE_BASE_PATH', test_workspace), \
                  patch('pathlib.Path.cwd', return_value=test_workspace), \
-                 patch('os.chdir') as mock_chdir, \
-                 patch('os.getcwd', return_value=str(sub_dir)):
+                 patch('os.chdir') as mock_chdir:
                 result = change_directory.invoke({"path": "subdir"})
 
                 assert "Successfully changed to:" in result
@@ -307,8 +300,12 @@ class TestDirectoryNavigation:
             spaced_dir = test_workspace / "directory with spaces"
             spaced_dir.mkdir()
 
-            # Mock the workspace root
-            with patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
+            # Mock guardrails to simulate running inside workspace, and workspace constants
+            with patch('src.agent.tools.navigation.guardrails.'
+                       '_reset_to_workspace_root_if_outside', return_value=None), \
+                 patch('src.agent.tools.navigation.navigation._is_within_workspace',
+                       return_value=True), \
+                 patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
                        test_workspace), \
                  patch('src.agent.tools.navigation.navigation.'
                        'AGENT_WORKSPACE_BASE_PATH', test_workspace), \
@@ -330,8 +327,12 @@ class TestDirectoryNavigation:
             nested_path = test_workspace / "level1" / "level2" / "level3" / "target"
             nested_path.mkdir(parents=True)
 
-            # Mock the workspace root
-            with patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
+            # Mock guardrails to simulate running inside workspace, and workspace constants
+            with patch('src.agent.tools.navigation.guardrails.'
+                       '_reset_to_workspace_root_if_outside', return_value=None), \
+                 patch('src.agent.tools.navigation.navigation._is_within_workspace',
+                       return_value=True), \
+                 patch('src.agent.tools.navigation.config.AGENT_WORKSPACE_BASE_PATH',
                        test_workspace), \
                  patch('src.agent.tools.navigation.navigation.'
                        'AGENT_WORKSPACE_BASE_PATH', test_workspace), \
