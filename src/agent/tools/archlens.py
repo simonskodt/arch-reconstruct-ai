@@ -1,5 +1,9 @@
+"""
+    This file defines tools for interacting with ArchLens.
+"""
+
 import os
-import json 
+import json
 from typing import Dict, Any, List
 from pydantic import BaseModel
 from langchain.tools import tool
@@ -11,16 +15,15 @@ class ArchLensConfig(BaseModel):
     views: Dict[str, Dict[str, List[Dict[str, Any]]]]
     saveLocation:str  = "./diagrams/"
 
-
 REPOSITORY_FOLDER = "repositories"
 
-@tool('run_archLens')
-def run_archLens() -> str:
+@tool('run_archlens')
+def run_archlens() -> str:
     """"Run archLens on the current directory (should be in a repository)."""
     current_dir = os.getcwd()
     
     if not os.path.exists("archlens.json"):
-        return f"archlens.json does not exist in {current_dir}. Please make sure you're in a repository directory and run init_archLens first."
+        return f"archlens.json does not exist in {current_dir}.     Please make sure you're in a repository directory and run init_archlens first."
 
     try:
         exit_code = os.system("archlens render")
@@ -31,8 +34,8 @@ def run_archLens() -> str:
     except Exception as e:
         return f"Error running archLens: {str(e)}"
 
-@tool('init_archLens')
-def init_archLens() -> str:
+@tool('init_archlens')
+def init_archlens() -> str:
     """"Initialize archLens in the current directory (should be in a repository)."""
     current_dir = os.getcwd()
     
@@ -52,13 +55,13 @@ def init_archLens() -> str:
         except Exception as e:
             return f"Error initializing archLens: {str(e)}"
 
-@tool('read_archLens_config_file')
-def read_archLens_config_file() -> ArchLensConfig:
+@tool('read_archlens_config_file')
+def read_archlens_config_file() -> ArchLensConfig:
     """"Reads the content of the archlens.json file."""
 
     config_path = "archlens.json"
     if not os.path.exists(config_path):
-        return "archlens.json does not exist. Please run init_archLens first."
+        return "archlens.json does not exist. Please run init_archlens first."
     
     with open('archlens.json', 'r') as file:
         data = json.load(file)
@@ -68,7 +71,7 @@ def read_archLens_config_file() -> ArchLensConfig:
     return arch
 
 @tool('write_archLens_config_file')
-def write_archLens_config_file(arch: ArchLensConfig) -> str:
+def write_archlens_config_file(arch: ArchLensConfig) -> str:
     """"Writes content to the archlens.json file.
         args: 
     """
@@ -79,9 +82,9 @@ def write_archLens_config_file(arch: ArchLensConfig) -> str:
     return "Wrote to config file"
 
 @tool('create_ArchLensConfig_Object')
-def create_archLens_config_object(packageName:str, path: str, depth: int) -> ArchLensConfig:
+def create_archlens_config_object(package_name:str, path: str, depth: int) -> ArchLensConfig:
     """"Creates an ArchLensConfig object, which is used when writing to the archlens.json file. This is the structure of the ArchLensConfig object:
-    viewsJson = {"top-level-view-depth-1": {
+    views_json = {"top-level-view-depth-1": {
       "packages": [
         {
           "path": "*",
@@ -99,7 +102,7 @@ def create_archLens_config_object(packageName:str, path: str, depth: int) -> Arc
     }}
     """
 
-    viewsJson = {packageName: {
+    views_json = {package_name: {
       "packages": [
         {
           "path": path,
@@ -109,12 +112,12 @@ def create_archLens_config_object(packageName:str, path: str, depth: int) -> Arc
     }
     }
 
-    archlensObject = ArchLensConfig(name='testing' ,rootFolder='zeeguu', views=viewsJson)
-    return archlensObject
+    archlens_object = ArchLensConfig(name='testing' ,rootFolder='zeeguu', views=views_json)
+    return archlens_object
 
 ##
 @tool('add_view_to_ArchLensConfig_Object')
-def add_view_to_archLens_config_object(archlensObject: ArchLensConfig, packageName:str, path:str, depth: int) -> ArchLensConfig:
+def add_view_to_archlens_config_object(archlens_object: ArchLensConfig, package_name:str, path:str, depth: int) -> ArchLensConfig:
 
   """"Adds a view to an existing ArchLensConfig object. 
           args: 
@@ -122,7 +125,7 @@ def add_view_to_archLens_config_object(archlensObject: ArchLensConfig, packageNa
               name: The name of the view to add.
   """
 
-  archlensObject.views[packageName] = {
+  archlens_object.views[package_name] = {
       "packages": [
         {
           "path": path,
@@ -130,4 +133,4 @@ def add_view_to_archLens_config_object(archlensObject: ArchLensConfig, packageNa
         }
       ]
     }
-  return archlensObject
+  return archlens_object
