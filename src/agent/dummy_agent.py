@@ -33,7 +33,8 @@ from src.agent.tools.archlens import (
     read_archlens_config_file,
     write_archlens_config_file,
     create_archlens_config_object,
-    add_view_to_archlens_config_object
+    add_view_to_archlens_config_object,
+    change_archlens_config_root_folder
 )
 
 navigation_tools = get_navigation_tools()
@@ -43,7 +44,8 @@ tools = [git_clone_tool,
          extract_repository_details,
          load_extracted_repository, run_archlens, init_archlens,
          read_archlens_config_file, write_archlens_config_file,
-         create_archlens_config_object, add_view_to_archlens_config_object]  + \
+         create_archlens_config_object, add_view_to_archlens_config_object,
+         change_archlens_config_root_folder]  + \
     drawing_tools + navigation_tools + file_management_tools
 
 
