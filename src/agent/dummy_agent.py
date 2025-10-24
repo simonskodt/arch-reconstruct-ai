@@ -43,8 +43,8 @@ tools = [git_clone_tool,
          extract_repository_details,
          load_extracted_repository, run_archlens, init_archlens,
          read_archlens_config_file, write_archlens_config_file,
-         create_archlens_config_object, add_view_to_archlens_config_object]
-+ drawing_tools + navigation_tools + file_management_tools
+         create_archlens_config_object, add_view_to_archlens_config_object]  + \
+    drawing_tools + navigation_tools + file_management_tools
 
 
 always_included_tools = [nav_tool.name for nav_tool in navigation_tools]
