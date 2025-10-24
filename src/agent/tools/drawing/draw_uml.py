@@ -4,6 +4,7 @@ This module provides tools for drawing UML diagrams.
 import os
 from typing import Optional, get_args
 
+from langgraph.types import Command
 from langchain.tools import tool
 import requests
 from src.agent.tools.drawing.config import (
@@ -12,13 +13,17 @@ from src.agent.tools.drawing.config import (
     DEFAULT_OUTPUT_FORMAT,
     VALIDATION_OUTPUT_FORMAT,
     SUCCESS_STATUS_CODE,
+    DEFAULT_DIAGRAM_LOCATION,
     ExportFormats
 )
 from src.agent.tools.drawing.util import encode
+from src.agent.tools.navigation.util import normalize_path
 
 
 @tool
-def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
+def create_uml_diagram(name: str,
+                       diagram_content: str,
+                       path: str = str(normalize_path(DEFAULT_DIAGRAM_LOCATION))) -> dict:
     """Draws a UML diagram and saves it to the specified path.
 
     Args:
@@ -27,13 +32,25 @@ def create_uml_diagram(name: str, diagram_content: str, path: str) -> str:
         path: The file path where to save the diagram
 
     Returns:
-        The path where the diagram was saved
+        A dict with success (bool), path (str), and error message if applicable.
     """
     # Ensure the diagram content has proper UML tags
     full_content = _ensure_uml_tags(diagram_content, name)
     if (err_msg := _validate_uml(full_content)):
-        return err_msg
-    return _save_uml(full_content, path, False)
+        return {"success": False, "error": err_msg}
+
+    result = _save_uml(full_content, path, False)
+    if result.startswith("Error:"):
+        return {"success": False, "error": result}
+    Command(update={
+        "diagrams": {
+            "diagram_name": {
+                "path": result,
+                "content": diagram_content,
+            }
+        }
+    })
+    return {"success": True, "path": result, "name": name}
 
 
 def _save_uml(uml_description: str, file_path: str, overwrite: bool = False) -> str:

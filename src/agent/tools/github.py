@@ -11,6 +11,7 @@ from typing import Optional, Dict, Any
 from git import Repo, GitCommandError
 from git.exc import NoSuchPathError, InvalidGitRepositoryError
 from langchain.tools import tool
+from langgraph.types import Command
 from gitingest.config import MAX_FILE_SIZE
 
 from src.agent.tools.navigation import resolve_repository_path
@@ -63,7 +64,14 @@ def git_clone_tool(
 
         os.makedirs(full_dest, exist_ok=True)
         repo = Repo.clone_from(repo_url, full_dest, **kwargs)
-
+        Command(update={
+            "repositories": {
+                str(full_dest): {
+                    "path": str(full_dest),
+                    "url": repo_url,
+                }
+            }
+        })
         return {
             "success": True,
             "dest": str(full_dest),
@@ -75,8 +83,8 @@ def git_clone_tool(
 
 @tool("extract_git_repository_details_to_file")
 async def extract_repository_details(
-    local_repository_path: Optional[str],
-    output_path: Optional[str] = GITINGEST_DEFAULT_OUTPUT_LOCATION,
+    local_repository_path: str,
+    output_path: str = GITINGEST_DEFAULT_OUTPUT_LOCATION,
 ) -> Dict[str, Any]:
     """
     Extract and ingest a Git repository (local or remote) into a readable LLM format.
@@ -86,7 +94,6 @@ async def extract_repository_details(
         github_url: HTTPS URL of a remote GitHub repository.
         output_path: Output path for the extraction
             (default: "extract_repository_details.json" (GITINGEST_DEFAULT_OUTPUT_LOCATION),
-            use "-" or "stdout" for stdout).
     Returns:
         path to a JSON dict with summary (str), tree (str), and content (str) of the repository.
     """
@@ -111,9 +118,9 @@ async def extract_repository_details(
         }
         # Get current working directory in a non-blocking way
         cwd = await asyncio.to_thread(os.getcwd)
-        if local_repository_path is not None:
-            path = normalize_path(local_repository_path, cwd)
-        else:
+        path = normalize_path(local_repository_path, cwd)
+
+        if not path or not os.path.exists(path) or not os.path.isdir(path):
             return {
                 "success": False,
                 "error": "local_repository_path must be provided"
@@ -129,10 +136,6 @@ async def extract_repository_details(
 
         extraction = {"summary": summary, "tree": tree, "content": content}
 
-        if output_path in ["-", "stdout"]:
-            print(json.dumps(extraction, ensure_ascii=False, indent=2))
-            return {"success": True, "data": extraction}
-
         if output_path is not None:
             # Save the output file in the repository folder
             output_file_path = os.path.join(path, output_path)
@@ -141,9 +144,18 @@ async def extract_repository_details(
                 output_file_path,
                 extraction
             )
+            Command(update={
+                "repositories": {
+                    local_repository_path: {
+                        "extracted_content_path": output_file_path,
+                        "tree_structure": tree,
+                        "summary": summary
+                    }
+                }
+            })
             return {"success": True, "path": output_file_path}
 
-        return {"success": True, "data": extraction}
+        return {"success": False, "data": "No output path provided."}
 
     except PermissionError as e:
         return {"success": False, "error": f"Permission denied: {e}"}

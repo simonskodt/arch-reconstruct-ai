@@ -2,9 +2,14 @@
 This module provides configuration settings for the drawing tools.
 """
 from typing import Literal
+from src.agent.tools.navigation.config import (
+    AGENT_WORKSPACE_BASE_PATH,
+    TEMP_DIR
+)
 
 # Local file settings
 ENCODING = "utf-8"
+DEFAULT_DIAGRAM_LOCATION = f"{AGENT_WORKSPACE_BASE_PATH}/{TEMP_DIR}/diagrams/"
 
 # PlantUML server configuration
 PLANT_UML_SERVER_URL = "http://localhost:8080"
