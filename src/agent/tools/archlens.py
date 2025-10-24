@@ -1,13 +1,11 @@
 """
     This file defines tools for interacting with ArchLens.
 """
-
 import os
 import json
 from typing import Dict, Any, List
 from pydantic import BaseModel
 from langchain.tools import tool
-
 
 class ArchLensConfig(BaseModel):
     name: str
@@ -21,10 +19,8 @@ REPOSITORY_FOLDER = "repositories"
 def run_archlens() -> str:
     """"Run archLens on the current directory (should be in a repository)."""
     current_dir = os.getcwd()
-    
     if not os.path.exists("archlens.json"):
-        return f"archlens.json does not exist in {current_dir}.     Please make sure you're in a repository directory and run init_archlens first."
-
+        return f"archlens.json does not exist in {current_dir}. Please make sure you're in a repository directory and run init_archlens first."
     try:
         exit_code = os.system("archlens render")
         if exit_code == 0:
@@ -62,7 +58,6 @@ def read_archlens_config_file() -> ArchLensConfig:
     config_path = "archlens.json"
     if not os.path.exists(config_path):
         return "archlens.json does not exist. Please run init_archlens first."
-    
     with open('archlens.json', 'r') as file:
         data = json.load(file)
 
@@ -118,13 +113,12 @@ def create_archlens_config_object(package_name:str, path: str, depth: int) -> Ar
 ##
 @tool('add_view_to_ArchLensConfig_Object')
 def add_view_to_archlens_config_object(archlens_object: ArchLensConfig, package_name:str, path:str, depth: int) -> ArchLensConfig:
-
+  
   """"Adds a view to an existing ArchLensConfig object. 
           args: 
               archlensObject: The existing ArchLensConfig object.
               name: The name of the view to add.
   """
-
   archlens_object.views[package_name] = {
       "packages": [
         {
