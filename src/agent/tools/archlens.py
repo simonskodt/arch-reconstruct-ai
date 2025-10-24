@@ -73,7 +73,7 @@ def write_archlens_config_file(arch: ArchLensConfig) -> str:
     return "Wrote to config file"
 
 @tool('create_ArchLensConfig_Object')
-def create_archlens_config_object(package_name:str, path: str, depth: int) -> ArchLensConfig:
+def create_archlens_config_object(package_name:str, path: str, depth: int, root_folder:str) -> ArchLensConfig:
     """"Creates an ArchLensConfig object, which is used when writing to the archlens.json file.
     This is the structure of the ArchLensConfig object:
     views_json = {"top-level-view-depth-1": {
@@ -105,6 +105,18 @@ def create_archlens_config_object(package_name:str, path: str, depth: int) -> Ar
     }
 
     archlens_object = ArchLensConfig(name='testing' ,rootFolder='zeeguu', views=views_json)
+    return archlens_object
+
+
+@tool('change_ArchLensConfig_RootFolder')
+def change_archlens_config_root_folder(archlens_object: ArchLensConfig,
+                                       new_root_folder: str) -> ArchLensConfig:
+    """Changes the rootFolder of an existing ArchLensConfig object.
+                    args:
+                            archlensObject: The existing ArchLensConfig object.
+                            newRootFolder: The new root folder to set.
+    """
+    archlens_object.rootFolder = new_root_folder
     return archlens_object
 
 ##
