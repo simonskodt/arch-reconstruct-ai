@@ -29,7 +29,7 @@ from src.agent.tools.github import (
 
 from src.agent.tools.archlens import (
     run_archLens,
-    init_archLens,                          
+    init_archLens,
     read_archLens_config_file,
     write_archLens_config_file,
     create_archLens_config_object,
@@ -41,9 +41,10 @@ file_management_tools = get_file_management_tools()
 drawing_tools = get_drawing_tools()
 tools = [git_clone_tool,
          extract_repository_details,
-         load_extracted_repository, run_archLens, init_archLens, 
-         read_archLens_config_file, write_archLens_config_file, 
-         create_archLens_config_object, add_view_to_archLens_config_object] + drawing_tools + navigation_tools + file_management_tools
+         load_extracted_repository, run_archLens, init_archLens,
+         read_archLens_config_file, write_archLens_config_file,
+         create_archLens_config_object, add_view_to_archLens_config_object]
++ drawing_tools + navigation_tools + file_management_tools
 
 
 always_included_tools = [nav_tool.name for nav_tool in navigation_tools]

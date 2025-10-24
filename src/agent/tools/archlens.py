@@ -1,16 +1,15 @@
-from typing import Optional, Dict, Any, List
-from logging import Handler
-from pydantic import BaseModel
-from langchain.tools import tool
 import os
 import json 
+from typing import Dict, Any, List
+from pydantic import BaseModel
+from langchain.tools import tool
 
 
 class ArchLensConfig(BaseModel):
-  name: str
-  rootFolder: str
-  views: Dict[str, Dict[str, List[Dict[str, Any]]]]
-  saveLocation:str  = "./diagrams/"
+    name: str
+    rootFolder: str
+    views: Dict[str, Dict[str, List[Dict[str, Any]]]]
+    saveLocation:str  = "./diagrams/"
 
 
 REPOSITORY_FOLDER = "repositories"
