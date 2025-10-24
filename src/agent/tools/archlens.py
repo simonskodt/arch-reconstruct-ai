@@ -1,0 +1,128 @@
+"""
+    This file defines tools for interacting with ArchLens.
+"""
+import os
+import json
+from typing import Dict, Any, List
+from pydantic import BaseModel
+from langchain.tools import tool
+
+class ArchLensConfig(BaseModel):
+    """Data model for ArchLens configuration."""
+    name: str
+    rootFolder: str
+    views: Dict[str, Dict[str, List[Dict[str, Any]]]]
+    saveLocation:str  = "./diagrams/"
+
+REPOSITORY_FOLDER = "repositories"
+
+@tool('run_archlens')
+def run_archlens() -> str:
+    """"Run archLens on the current directory (should be in a repository)."""
+    current_dir = os.getcwd()
+    if not os.path.exists("archlens.json"):
+        return f"archlens.json does not exist in {current_dir}.\
+            Please make sure you're in a repository directory and run init_archlens first."
+    try:
+        exit_code = os.system("archlens render")
+        if exit_code == 0:
+            return f"Successfully ran archLens in {current_dir}"
+        return f"archLens render failed with exit code {exit_code}"
+    except OSError as e:
+        return f"Error running archLens: {str(e)}"
+
+@tool('init_archlens')
+def init_archlens() -> str:
+    """"Initialize archLens in the current directory (should be in a repository)."""
+    current_dir = os.getcwd()
+    # Check if we're in what looks like a repository directory
+    if not (REPOSITORY_FOLDER in current_dir or os.path.exists(".git")):
+        return f"Current directory ({current_dir}) doesn't appear to be a repository. \
+              Please navigate to a repository first."
+    if os.path.exists("archlens.json"):
+        return f"archlens.json already exists in {current_dir}, skipping initialization."
+    try:
+        exit_code = os.system("archlens init")
+        if exit_code == 0:
+            return f"Successfully initialized archLens in {current_dir}"
+        return f"archLens init failed with exit code {exit_code}"
+    except OSError as e:
+        return f"Error initializing archLens: {str(e)}"
+
+@tool('read_archlens_config_file')
+def read_archlens_config_file() -> ArchLensConfig:
+    """"Reads the content of the archlens.json file."""
+
+    config_path = "archlens.json"
+    if not os.path.exists(config_path):
+        return "archlens.json does not exist. Please run init_archlens first."
+    with open('archlens.json', 'r', encoding="UTF-8") as file:
+        data = json.load(file)
+    #print(json.dumps(data, indent=4))
+    arch = ArchLensConfig(**data)
+    return arch
+
+@tool('write_archLens_config_file')
+def write_archlens_config_file(arch: ArchLensConfig) -> str:
+    """"Writes content to the archlens.json file.
+            args:
+    """
+    config_path = "archlens.json"
+    with open(config_path, 'w', encoding="UTF-8") as file:
+        json.dump(arch.__dict__, file)
+    return "Wrote to config file"
+
+@tool('create_ArchLensConfig_Object')
+def create_archlens_config_object(package_name:str, path: str, depth: int) -> ArchLensConfig:
+    """"Creates an ArchLensConfig object, which is used when writing to the archlens.json file.
+    This is the structure of the ArchLensConfig object:
+    views_json = {"top-level-view-depth-1": {
+        "packages": [
+            {
+                "path": "*",
+                "depth": 1
+            }
+        ]
+    },
+    "top-level-view-depth-2": {
+        "packages": [
+            {
+                "path": "*",
+                "depth": 2
+            }
+        ]
+    }}
+    """
+
+    views_json = {package_name: {
+        "packages": [
+            {
+                "path": path,
+                "depth": depth
+            }
+        ]
+    }
+    }
+
+    archlens_object = ArchLensConfig(name='testing' ,rootFolder='zeeguu', views=views_json)
+    return archlens_object
+
+##
+@tool('add_view_to_ArchLensConfig_Object')
+def add_view_to_archlens_config_object(archlens_object: ArchLensConfig,
+                                       package_name:str,
+                                       path:str, depth: int) -> ArchLensConfig:
+    """Adds a view to an existing ArchLensConfig object.
+                    args:
+                            archlensObject: The existing ArchLensConfig object.
+                            name: The name of the view to add.
+    """
+    archlens_object.views[package_name] = {
+            "packages": [
+                {
+                    "path": path,
+                    "depth": depth
+                }
+            ]
+        }
+    return archlens_object
