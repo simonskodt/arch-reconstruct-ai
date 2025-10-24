@@ -58,7 +58,7 @@ def _save_uml(uml_description: str, file_path: str, overwrite: bool = False) -> 
     if not overwrite and os.path.exists(file_path):
         return f"Error: File {file_path} already exists."
 
-    with open(file_path, "w", encoding=ENCODING) as file:
+    with open(file_path, "x", encoding=ENCODING) as file:
         file.write(uml_description)
 
     return file_path

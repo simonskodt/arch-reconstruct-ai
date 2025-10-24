@@ -6,11 +6,13 @@ import shutil
 import json
 import asyncio
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union, Annotated
 
 from git import Repo, GitCommandError
 from git.exc import NoSuchPathError, InvalidGitRepositoryError
 from langchain.tools import tool
+from langchain_core.messages import ToolMessage
+from langchain_core.tools import InjectedToolCallId
 from langgraph.types import Command
 from gitingest.config import MAX_FILE_SIZE
 
@@ -22,9 +24,10 @@ from .gitingest_helpers import ingest_local_non_blocking, normalize_path
 def git_clone_tool(
     repo_url: str,
     dest: str,
+    tool_call_id: Annotated[str, InjectedToolCallId],
     branch: Optional[str] = None,
     overwrite: bool = False,
-) -> Dict[str, Any]:
+) -> Union[Dict[str, Any], Command]:
     """
     Clone a Git repository into ./repositories/{dest}.
 
@@ -63,29 +66,30 @@ def git_clone_tool(
             full_dest = f"{full_dest}/{branch}"
 
         os.makedirs(full_dest, exist_ok=True)
-        repo = Repo.clone_from(repo_url, full_dest, **kwargs)
-        Command(update={
+        Repo.clone_from(repo_url, full_dest, **kwargs)
+
+        return Command(update={
+            "messages": [ToolMessage(content=f"Successfully cloned repository {repo_url}\
+                                      to {str(full_dest)}", tool_call_id=tool_call_id)],
             "repositories": {
                 str(full_dest): {
                     "path": str(full_dest),
                     "url": repo_url,
+                    "extracted_content_path": None,
+                    "tree_structure": None,
+                    "summary": None
                 }
             }
         })
-        return {
-            "success": True,
-            "dest": str(full_dest),
-            "branch": repo.active_branch.name if not repo.head.is_detached else "detached",
-            "error": None,
-        }
     except (GitCommandError, NoSuchPathError, InvalidGitRepositoryError) as e:
         return {"success": False, "dest": dest, "error": str(e)}
 
 @tool("extract_git_repository_details_to_file")
 async def extract_repository_details(
     local_repository_path: str,
+    tool_call_id: Annotated[str, InjectedToolCallId],
     output_path: str = GITINGEST_DEFAULT_OUTPUT_LOCATION,
-) -> Dict[str, Any]:
+) -> Union[Dict[str, Any], Command]:
     """
     Extract and ingest a Git repository (local or remote) into a readable LLM format.
 
@@ -144,7 +148,10 @@ async def extract_repository_details(
                 output_file_path,
                 extraction
             )
-            Command(update={
+            return Command(update={
+                "messages": [ToolMessage(content=f"Successfully extracted repository details to \
+                                         {output_file_path}",
+                                         tool_call_id=tool_call_id)],
                 "repositories": {
                     local_repository_path: {
                         "extracted_content_path": output_file_path,
@@ -153,7 +160,6 @@ async def extract_repository_details(
                     }
                 }
             })
-            return {"success": True, "path": output_file_path}
 
         return {"success": False, "data": "No output path provided."}
 
